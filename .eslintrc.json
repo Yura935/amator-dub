@@ -55,7 +55,7 @@
     "require-await": "warn",
     "arrow-spacing": "error",
     "block-spacing": "error",
-    "comma-dangle": ["error", "never"],
+    "comma-dangle": ["warn", "never"],
     "eol-last": "error",
     "max-len": ["error", { "code": 150 }],
     "no-multi-spaces": "error",

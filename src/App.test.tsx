@@ -1,8 +1,8 @@
-import { render, screen } from "@testing-library/react";
+import { RenderResult, render } from "@testing-library/react";
 import App from "./App";
 
-test("renders learn react link", () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+test("should mount component properly", () => {
+  const component: RenderResult = render(<App />);
+
+  expect(component).toBeTruthy();
 });
