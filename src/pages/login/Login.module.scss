@@ -1,5 +1,11 @@
-@import "../../mixins/flexbox";
+@import "../../styles/mixins/flexbox";
 
 .signForm {
   margin-top: 10px;
+}
+
+.formWrapper {
+  height: 100vh;
+
+  @include flexbox(column, center, center, nowrap);
 }

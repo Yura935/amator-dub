@@ -1,0 +1,32 @@
+.main {
+  width: 100%;
+  padding: 50px;
+}
+
+.pageTitle {
+  padding-bottom: 10px;
+  border-bottom: 2px solid gray;
+  margin-bottom: 12px;
+}
+
+.profile-icon {
+  width: 80px;
+  height: 80px;
+}
+
+.pull-left {
+  margin-right: 10px;
+}
+
+.media {
+  &-body {
+    padding-top: 20px;
+  }
+}
+
+.registrationDate {
+  width: 25px;
+  height: 25px;
+  background: url("../../../public/calendarIcon.svg");
+  margin-right: 5px;
+}

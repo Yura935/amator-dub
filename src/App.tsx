@@ -1,12 +1,23 @@
+import { useContext } from "react";
+
 import { RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import router from "./router/router";
 
+import "bootstrap/dist/css/bootstrap.min.css";
 import classes from "./App.module.scss";
+import Loader from "./components/loader/Loader";
+import { MainContext, MainProvider } from "./context/main/mainContext";
 
-const App = () => (
-  <div className={classes.app}>
+const App = () => {
+  const { isLoading } = useContext(MainContext);
+  console.log(isLoading);
+
+  return (
+    <div className={classes.app}>
+      <MainProvider>
+        {isLoading && <Loader />}
         <RouterProvider router={router}></RouterProvider>
         <ToastContainer
           role="alert"
@@ -18,7 +29,9 @@ const App = () => (
           hideProgressBar={false}
           theme="colored"
         />
-      </div>
-);
+      </MainProvider>
+    </div>
+  );
+};
 
 export default App;

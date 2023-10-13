@@ -81,48 +81,43 @@ const LoginPage = () => {
 
   return (
     <>
-      <Card
-        sx={{
-          width: 320,
-          maxWidth: "100%",
-          boxShadow: "lg",
-        }}
-      >
-        <CardContent sx={{ alignItems: "center", textAlign: "center" }}>
-          <Typography fontSize="lg" fontWeight="lg">
-            Welcome to AmatorDub
-          </Typography>
-          <form
-            className={classes.signForm}
-            onSubmit={handleSignInSubmit}
-          >
-            {signInputsList.map((input) => (
-              <Input
-                key={input.key}
-                variant="outlined"
+      <div className={classes.formWrapper}>
+        <Card
+          sx={{
+            width: 320,
+            maxWidth: "100%",
+            boxShadow: "lg",
+          }}
+        >
+          <CardContent sx={{ alignItems: "center", textAlign: "center" }}>
+            <Typography fontSize="lg" fontWeight="lg">
+              Welcome to AmatorDub
+            </Typography>
+            <form className={classes.signForm} onSubmit={handleSignInSubmit}>
+              {signInputsList.map((input) => (
+                <Input
+                  key={input.key}
+                  variant="outlined"
+                  color="neutral"
+                  value={input.value}
+                  onChange={input.onChange}
+                  slotProps={{ input: input.inputParams }}
+                  sx={{ mb: 1, fontSize: "var(--joy-fontSize-sm)" }}
+                  disabled={isLoginRequest}
+                />
+              ))}
+              <Button
+                variant="soft"
+                type="submit"
                 color="neutral"
-                value={input.value}
-                onChange={input.onChange}
-                slotProps={{ input: input.inputParams }}
-                sx={{ mb: 1, fontSize: "var(--joy-fontSize-sm)" }}
-                disabled={isLoginRequest}
-              />
-            ))}
-            <Button
-              variant="soft"
-              type="submit"
-              color="neutral"
-              aria-label="submit the form"
-            >
-              {isLoginRequest ? (
-                <CircularProgress />
-              ) : (
-                "Login"
-              )}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+                aria-label="submit the form"
+              >
+                {isLoginRequest ? <CircularProgress /> : "Login"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </>
   );
 };
