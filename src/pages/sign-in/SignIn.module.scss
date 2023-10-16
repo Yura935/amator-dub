@@ -1,0 +1,90 @@
+@import "../../styles/mixins/flexbox";
+
+.signForm {
+  margin-top: 10px;
+}
+
+.formWrapper {
+  height: 100vh;
+  background-image: url("../../../public/signUpBackground.jpg");
+  background-size: cover;
+
+  &__inner {
+    width: 100%;
+    height: 100vh;
+    background-color: #00000080;
+    color: #fff;
+
+    @include flexbox(column, center, center, nowrap);
+  }
+}
+
+.logo {
+  width: 60px;
+  height: 60px;
+  margin-right: 10px;
+}
+
+.head {
+  margin-bottom: 30px;
+
+  h1 {
+    margin-bottom: 0;
+    font-size: 3rem;
+  }
+}
+
+.registerMenu {
+  margin-bottom: 40px;
+
+  @include flexbox(column, center, center, nowrap);
+
+  h6 {
+    margin-bottom: 10px;
+  }
+}
+
+.form-group {
+  margin: 0 20px 10px;
+}
+
+.inputGroup {
+  position: relative;
+  display: flex;
+  border-collapse: separate;
+
+  input {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}
+
+.hr {
+  border-width: 3px;
+  border-color: gray;
+  opacity: 0.5;
+}
+
+.input-icon {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  text-align: center;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: gray;
+  width: 45px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+
+  @include flexbox(row, center, center, nowrap);
+
+  svg {
+    cursor: default;
+  }
+}
+
+.loginLogo {
+  margin-right: 10px;
+}

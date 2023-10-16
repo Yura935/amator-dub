@@ -33,7 +33,7 @@ const MainPage = () => {
             aria-label="Cancel button for closing modal"
             onClick={() => hideModal()}
           >
-           Cancel
+            Cancel
           </Button>
         </section>
       </ModalDialog>

@@ -13,8 +13,9 @@ const EditUserProfilePage = () => {
     avatar: "",
     age: 22,
     location: "Lviv",
-    id: "testId",
+    uid: "testId",
     team: "POLITECH",
+    city: "Lviv",
     characteristics: {
       userHeight: 170,
       userWeight: 77,

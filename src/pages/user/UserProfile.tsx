@@ -1,43 +1,23 @@
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { Card } from "@mui/joy";
 import moment from "moment";
 
-import Header from "../../components/header/Header";
+import { IUser } from "../../interfaces/user";
+import { MainContext } from "../../context/main/mainContext";
 
 import classes from "./UserProfile.module.scss";
-import { IUser } from "../../interfaces/user";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { MainContext } from "../../context/main/mainContext";
+import { useAuthValue } from "../../context/user/userContext";
 
 const UserProfilePage = () => {
   const DOMAIN = process.env.AMATOR_DUB_DOMAIN;
   const location = useLocation();
   const currentLocation = location.pathname.split("/");
-  console.log(currentLocation);
 
   const [mode, setMode] = useState(currentLocation[currentLocation.length - 1]);
   const { showDeleteUserModal } = useContext(MainContext);
   const navigate = useNavigate();
-
-  const userMock: IUser = {
-    fullName: "Bohdan Kolodiy",
-    registrationDate: moment().toString(),
-    email: "user@gmail.com",
-    avatar: "",
-    age: 22,
-    location: "Lviv",
-    id: "testId",
-    team: "POLITECH",
-    characteristics: {
-      userHeight: 170,
-      userWeight: 77,
-      aces: 0,
-      blocks: 30,
-      maxJumpHeight: 190,
-      maxFeedForce: 30,
-      playedGamesCount: 100,
-    },
-  };
+  const { userData } = useAuthValue();
 
   const showUserProfile = () => {
     setMode("user");
@@ -101,11 +81,11 @@ const UserProfilePage = () => {
                 />
               </div>
               <div className={classes["media-body"]}>
-                <h4>{userMock.fullName}</h4>
+                <h4>{userData?.fullName}</h4>
                 <div className="d-flex">
                   <div className={classes.registrationDate}></div>
                   Registered from{" "}
-                  {moment(userMock.registrationDate).format("MMMM Do YYYY")}
+                  {moment(userData?.registrationDate).format("MMMM Do YYYY")}
                 </div>
               </div>
             </div>

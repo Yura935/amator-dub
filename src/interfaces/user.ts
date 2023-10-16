@@ -2,12 +2,14 @@ import { IUserCharacteristics } from "./userCharacteristics";
 
 export interface IUser {
   fullName: string;
-  id: string;
+  uid: string;
   email: string;
   registrationDate: string;
   avatar: string;
   characteristics: IUserCharacteristics
-  age?: number;
+  age: number;
+  city: string;
+  docId?: string;
   phone?: string;
   team?: string;
   location?: string;
