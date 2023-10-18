@@ -1,23 +1,31 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Card } from "@mui/joy";
 import moment from "moment";
 
-import { IUser } from "../../interfaces/user";
+import Loader from "../../components/loader/Loader";
 import { MainContext } from "../../context/main/mainContext";
+import { useAuthValue } from "../../context/user/userContext";
 
 import classes from "./UserProfile.module.scss";
-import { useAuthValue } from "../../context/user/userContext";
 
 const UserProfilePage = () => {
   const DOMAIN = process.env.AMATOR_DUB_DOMAIN;
   const location = useLocation();
   const currentLocation = location.pathname.split("/");
+  const { isLoading, setLoadingStatus } = useContext(MainContext);
 
   const [mode, setMode] = useState(currentLocation[currentLocation.length - 1]);
   const { showDeleteUserModal } = useContext(MainContext);
   const navigate = useNavigate();
   const { userData } = useAuthValue();
+
+  useEffect(() => {
+    setLoadingStatus(true);
+    setTimeout(() => {
+      setLoadingStatus(false);
+    }, 1000);
+  }, [userData]);
 
   const showUserProfile = () => {
     setMode("user");
@@ -94,6 +102,7 @@ const UserProfilePage = () => {
           </div>
         </Card>
       </main>
+      {isLoading && <Loader />}
     </>
   );
 };

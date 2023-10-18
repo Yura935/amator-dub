@@ -1,16 +1,18 @@
+import { Link, useNavigate } from "react-router-dom";
 import {
   faPersonWalkingArrowRight,
   faUser,
   faUserGear,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { signOut } from "firebase/auth";
+import { toast } from "react-toastify";
+import { useState } from "react";
 
-import { useNavigate } from "react-router-dom";
+import Toastr from "../toastr/Toastr";
+import { auth } from "../../firebase";
 
 import classes from "./Header.module.scss";
-import { useState } from "react";
-import { signOut } from "firebase/auth";
-import { auth } from "../../firebase";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -26,7 +28,11 @@ const Header = () => {
 
   const onSignOut = () => {
     signOut(auth);
-    navigate("signIn");
+    openProfileMenu();
+    localStorage.clear();
+    toast.success(
+      <Toastr itemName="Success" message="You are now logged out." />
+    );
   };
 
   return (
@@ -37,10 +43,6 @@ const Header = () => {
           alt="amatorDub logo"
           onClick={openUserProfilePage}
         />
-        {/* <div
-          className={classes["logoIcon"]}
-          onClick={openUserProfilePage}
-        ></div> */}
       </div>
       <nav className={classes["header-tabs"]}>
         <FontAwesomeIcon
@@ -52,26 +54,20 @@ const Header = () => {
         {isMenuOpen && (
           <ul className={classes.profileMenu}>
             <li>
-              <a href="">
-                <FontAwesomeIcon
-                  size="xl"
-                  cursor="pointer"
-                  icon={faUserGear}
-                  onClick={openProfileMenu}
-                />
+              <Link to="/user" onClick={openProfileMenu}>
+                <FontAwesomeIcon size="xl" cursor="pointer" icon={faUserGear} />
                 <span>Account Profile</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="" onClick={onSignOut}>
+              <Link to="/signIn" onClick={onSignOut}>
                 <FontAwesomeIcon
                   size="xl"
                   cursor="pointer"
                   icon={faPersonWalkingArrowRight}
-                  onClick={openProfileMenu}
                 />
                 <span>Sign Out</span>
-              </a>
+              </Link>
             </li>
           </ul>
         )}

@@ -57,6 +57,10 @@
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }
+
+  .formControl:focus {
+    box-shadow: 0 0 0 0.15rem #0d6efd40;
+  }
 }
 
 .hr {

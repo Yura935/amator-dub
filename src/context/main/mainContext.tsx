@@ -4,7 +4,7 @@ import { IGlobalState } from "../../interfaces/globalState";
 import MainReducer from "./mainReducer";
 
 export const initialGlobalState: IGlobalState = {
-  isLoading: false,
+  isLoading: true,
   isDeleteUserModalShown: false,
   setLoadingStatus: (status: boolean) => {},
   hideModal: () => {},
