@@ -1,4 +1,4 @@
-import { useAuthValue } from "../../../context/user/userContext";
+import { useAuthValue } from "../../../context/auth/authContext";
 
 import classes from "./ViewUserProfile.module.scss";
 

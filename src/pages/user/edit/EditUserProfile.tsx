@@ -1,32 +1,16 @@
-import { ChangeEvent, useState } from "react";
-import { Form } from "react-router-dom";
+import { ChangeEvent, FormEvent, useState } from "react";
 import classes from "./EditUserProfile.module.scss";
-import { IUser } from "../../../interfaces/user";
-import moment from "moment";
 import { Button } from "@mui/joy";
+import { useAuthValue } from "../../../context/auth/authContext";
+import { Form } from "react-bootstrap";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../../../firebase";
+import Toastr from "../../../components/toastr/Toastr";
+import { toast } from "react-toastify";
 
 const EditUserProfilePage = () => {
-  const userMock: IUser = {
-    fullName: "Bohdan Kolodiy",
-    registrationDate: moment().toString(),
-    email: "user@gmail.com",
-    avatar: "",
-    age: 22,
-    location: "Lviv",
-    uid: "testId",
-    team: "POLITECH",
-    city: "Lviv",
-    characteristics: {
-      userHeight: 170,
-      userWeight: 77,
-      aces: 0,
-      blocks: 30,
-      maxJumpHeight: 190,
-      maxFeedForce: 30,
-      playedGamesCount: 100,
-    },
-  };
-  const [userProfileData, setUserProfileData] = useState(userMock);
+  const { userData } = useAuthValue();
+  const [userProfileData, setUserProfileData] = useState(userData);
 
   const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setUserProfileData((prevState) => {
@@ -54,8 +38,28 @@ const EditUserProfilePage = () => {
       };
     });
   };
+
+  const onSubmitHandler = (event: FormEvent): void => {
+    event.preventDefault();
+
+    updateDoc(doc(db, "users", userData.docId), userProfileData)
+      .then((data) => {
+        toast.success(
+          <Toastr
+            itemName="Success"
+            message="Profile was updated successfully."
+          />
+        );
+      })
+      .catch((err) => {
+        toast.error(
+          <Toastr itemName="Updating error" message="Something went wrong." />
+        );
+      });
+  };
+
   return (
-    <Form className="form">
+    <Form className="form" onSubmit={onSubmitHandler}>
       <div className={classes["personalInfo"]}>
         <h5>Personal Information</h5>
         <div className="row mb-2">
@@ -67,7 +71,7 @@ const EditUserProfilePage = () => {
             type="email"
             name="email"
             id="email"
-            value={userProfileData.email}
+            value={userProfileData?.email}
             onChange={onChangeHandler}
           />
         </div>
@@ -80,7 +84,7 @@ const EditUserProfilePage = () => {
             type="text"
             name="location"
             id="location"
-            value={userProfileData.location}
+            value={userProfileData?.location}
             onChange={onChangeHandler}
           />
         </div>
@@ -94,7 +98,7 @@ const EditUserProfilePage = () => {
             name="age"
             id="age"
             min={10}
-            value={userProfileData.age}
+            value={userProfileData?.age}
             onChange={onChangeHandler}
           />
         </div>
@@ -107,7 +111,7 @@ const EditUserProfilePage = () => {
             type="text"
             name="team"
             id="team"
-            value={userProfileData.team}
+            value={userProfileData?.team}
             onChange={onChangeHandler}
           />
         </div>
@@ -124,7 +128,7 @@ const EditUserProfilePage = () => {
             min={100}
             name="userHeight"
             id="userHeight"
-            value={userProfileData.characteristics.userHeight}
+            value={userProfileData?.characteristics?.userHeight}
             onChange={onChangeHandler}
           />
         </div>
@@ -138,7 +142,7 @@ const EditUserProfilePage = () => {
             name="userWeight"
             id="userWeight"
             min={50}
-            value={userProfileData.characteristics.userWeight}
+            value={userProfileData?.characteristics?.userWeight}
             onChange={onChangeHandler}
           />
         </div>
@@ -152,7 +156,7 @@ const EditUserProfilePage = () => {
             name="maxJumpHeight"
             id="maxJumpHeight"
             min={140}
-            value={userProfileData.characteristics.maxJumpHeight}
+            value={userProfileData?.characteristics?.maxJumpHeight}
             onChange={onChangeHandler}
           />
         </div>
@@ -166,7 +170,7 @@ const EditUserProfilePage = () => {
             name="maxFeedForce"
             id="maxFeedForce"
             min={10}
-            value={userProfileData.characteristics.maxFeedForce}
+            value={userProfileData?.characteristics?.maxFeedForce}
             onChange={onChangeHandler}
           />
         </div>
@@ -180,12 +184,12 @@ const EditUserProfilePage = () => {
             name="playedGamesCount"
             id="playedGamesCount"
             min={0}
-            value={userProfileData.characteristics.playedGamesCount}
+            value={userProfileData?.characteristics?.playedGamesCount}
             onChange={onChangeHandler}
           />
         </div>
       </div>
-      <Button sx={{ float: "right" }} color="success">
+      <Button sx={{ float: "right" }} color="success" type="submit">
         Save
       </Button>
     </Form>

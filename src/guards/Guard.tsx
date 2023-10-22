@@ -1,13 +1,9 @@
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuthValue } from "../context/auth/authContext";
 
-export const Guard = (params: { routeRedirect: string }) => {
+export const Guard = () => {
   const uid = localStorage.getItem("uid");
+  const { isAuthenticated } = useAuthValue();
 
-  const location = useLocation();
-
-  return uid ? (
-    <Outlet />
-  ) : (
-    <Navigate to={params.routeRedirect} replace state={{ from: location }} />
-  );
+  return uid || isAuthenticated ? <Outlet /> : <Navigate to="/signIn" />;
 };
