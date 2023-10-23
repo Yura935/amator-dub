@@ -6,10 +6,10 @@ export interface IUser {
   email: string;
   registrationDate: string;
   avatar: string;
-  characteristics: IUserCharacteristics
+  characteristics: IUserCharacteristics;
   age: number;
   city: string;
-  docId?: string;
+  docId: string;
   phone?: string;
   team?: string;
   location?: string;

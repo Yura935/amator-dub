@@ -1,37 +1,43 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-import classes from "./EditUserProfile.module.scss";
-import { Button } from "@mui/joy";
-import { useAuthValue } from "../../../context/auth/authContext";
-import { Form } from "react-bootstrap";
 import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../../../firebase";
-import Toastr from "../../../components/toastr/Toastr";
+import { Button } from "@mui/joy";
+import { Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 
+import Toastr from "../../../components/toastr/Toastr";
+import { db } from "../../../firebase";
+import { useStore } from "../../../utils/storeManager";
+
+import classes from "./EditUserProfile.module.scss";
+
 const EditUserProfilePage = () => {
-  const { userData } = useAuthValue();
-  const [userProfileData, setUserProfileData] = useState(userData);
+  const { getUserDataFromStore, addUserDataToStore } = useStore();
+
+  const [userProfileData, setUserProfileData] = useState({
+    ...getUserDataFromStore,
+  });
 
   const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setUserProfileData((prevState) => {
       const updatedValues: Record<string, any> = { ...prevState };
-      for (const [key, value] of Object.entries(prevState)) {
-        if (key === "characteristics") {
-          for (const [k, val] of Object.entries(value)) {
-            if (k === event.target.id) {
-              updatedValues[key][k] = event.target.value;
-            } else {
-              updatedValues[key][k] = val;
-            }
-          }
+      const updatedCharacteristicsValues: Record<string, any> = {
+        ...prevState.characteristics,
+      };
+      for (const [key, value] of Object.entries(updatedValues)) {
+        if (key === event.target.id) {
+          updatedValues[key] = event.target.value;
         } else {
-          if (key === event.target.id) {
-            updatedValues[key] = event.target.value;
-          } else {
-            updatedValues[key] = value;
-          }
+          updatedValues[key] = value;
         }
       }
+      for (const [key, value] of Object.entries(updatedCharacteristicsValues)) {
+        if (key === event.target.id) {
+          updatedCharacteristicsValues[key] = event.target.value.toString();
+        } else {
+          updatedCharacteristicsValues[key] = value;
+        }
+      }
+      updatedValues["characteristics"] = updatedCharacteristicsValues;
       return {
         ...prevState,
         ...updatedValues,
@@ -42,8 +48,9 @@ const EditUserProfilePage = () => {
   const onSubmitHandler = (event: FormEvent): void => {
     event.preventDefault();
 
-    updateDoc(doc(db, "users", userData.docId), userProfileData)
+    updateDoc(doc(db, "users", userProfileData?.docId), { ...userProfileData })
       .then((data) => {
+        addUserDataToStore(userProfileData);
         toast.success(
           <Toastr
             itemName="Success"

@@ -1,15 +1,11 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { collection, getDocs } from "firebase/firestore";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Card } from "@mui/joy";
-import { User } from "firebase/auth";
 import moment from "moment";
 
-import { IUser } from "../../interfaces/user";
 import Loader from "../../components/loader/Loader";
 import { MainContext } from "../../context/main/mainContext";
-import { db } from "../../firebase";
-import { useAuthValue } from "../../context/auth/authContext";
+import { useStore } from "../../utils/storeManager";
 
 import classes from "./UserProfile.module.scss";
 
@@ -22,28 +18,15 @@ const UserProfilePage = () => {
   const [mode, setMode] = useState(currentLocation[currentLocation.length - 1]);
   const { showDeleteUserModal } = useContext(MainContext);
   const navigate = useNavigate();
-  const [currentUserData, setCurrentUserData] = useState<IUser | null>(null);
-  const { currentUser, setUserData } = useAuthValue();
-
-  const getUserData = useCallback(async (user: User | null) => {
-    await getDocs(collection(db, "users")).then((querySnapshot) => {
-      const users = querySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        docId: doc.id,
-      }));
-      const curUser = (users as IUser[]).find((u) => u?.uid === user?.uid);
-      setUserData(curUser!);
-      setCurrentUserData(curUser!);
-      setLoadingStatus(false);
-    });
-  }, []);
+  const { getUserDataFromStore } = useStore();
 
   useEffect(() => {
-    setLoadingStatus(true);
-    getUserData(currentUser);
+    !getUserDataFromStore.uid
+      ? setLoadingStatus(true)
+      : setLoadingStatus(false);
     navigate("/user");
     setMode("user");
-  }, [currentUser]);
+  }, [getUserDataFromStore]);
 
   const showUserProfile = () => {
     setMode("user");
@@ -107,11 +90,11 @@ const UserProfilePage = () => {
                 />
               </div>
               <div className={classes["media-body"]}>
-                <h4>{currentUserData?.fullName}</h4>
+                <h4>{getUserDataFromStore?.fullName}</h4>
                 <div className="d-flex">
                   <div className={classes.registrationDate}></div>
                   Registered from{" "}
-                  {moment(currentUserData?.registrationDate).format(
+                  {moment(getUserDataFromStore?.registrationDate).format(
                     "MMMM Do YYYY"
                   )}
                 </div>

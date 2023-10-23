@@ -1,10 +1,10 @@
 export interface IUserCharacteristics {
-    userHeight: number;
-    userWeight: number;
-    maxJumpHeight: number;
-    maxFeedForce: number;
-    playedGamesCount: number;
-    serving?: number;
-    aces?: number;
-    blocks?: number;
+  userHeight: number | string;
+  userWeight: number | string;
+  maxJumpHeight: number | string;
+  maxFeedForce: number | string;
+  playedGamesCount: number | string;
+  serving?: number | string;
+  aces?: number | string;
+  blocks?: number | string;
 }

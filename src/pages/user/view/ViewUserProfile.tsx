@@ -1,9 +1,10 @@
-import { useAuthValue } from "../../../context/auth/authContext";
+import { useStore } from "../../../utils/storeManager";
 
 import classes from "./ViewUserProfile.module.scss";
 
 const ViewUserProfilePage = () => {
-  const { userData } = useAuthValue();
+  const { getUserDataFromStore } = useStore();
+
   return (
     <>
       <div className={classes["personalInfo"]}>
@@ -12,31 +13,31 @@ const ViewUserProfilePage = () => {
           <div className="label col-6">
             <h6>Email:</h6>
           </div>
-          <p className="col-6">{userData?.email}</p>
+          <p className="col-6">{getUserDataFromStore?.email}</p>
         </div>
         <div className="row">
           <div className="label col-6">
             <h6>City:</h6>
           </div>
-          <p className="col-6">{userData?.city}</p>
+          <p className="col-6">{getUserDataFromStore?.city}</p>
         </div>
         <div className="row">
           <div className="label col-6">
             <h6>Location:</h6>
           </div>
-          <p className="col-6">{userData?.location}</p>
+          <p className="col-6">{getUserDataFromStore?.location}</p>
         </div>
         <div className="row">
           <div className="label col-6">
             <h6>Age:</h6>
           </div>
-          <p className="col-6">{userData?.age}</p>
+          <p className="col-6">{getUserDataFromStore?.age}</p>
         </div>
         <div className="row">
           <div className="label col-6">
             <h6>Team:</h6>
           </div>
-          <p className="col-6">{userData?.team}</p>
+          <p className="col-6">{getUserDataFromStore?.team}</p>
         </div>
       </div>
       <div className={classes["userCharacteristics"]}>
@@ -45,31 +46,41 @@ const ViewUserProfilePage = () => {
           <div className="label col-6">
             <h6>Player Height:</h6>
           </div>
-          <p className="col-6">{userData?.characteristics?.userHeight}</p>
+          <p className="col-6">
+            {getUserDataFromStore?.characteristics?.userHeight}
+          </p>
         </div>
         <div className="row">
           <div className="label col-6">
             <h6>Player Weight:</h6>
           </div>
-          <p className="col-6">{userData?.characteristics?.userWeight}</p>
+          <p className="col-6">
+            {getUserDataFromStore?.characteristics?.userWeight}
+          </p>
         </div>
         <div className="row">
           <div className="label col-6">
             <h6>Max Jump Height (cm):</h6>
           </div>
-          <p className="col-6">{userData?.characteristics?.maxJumpHeight}</p>
+          <p className="col-6">
+            {getUserDataFromStore?.characteristics?.maxJumpHeight}
+          </p>
         </div>
         <div className="row">
           <div className="label col-6">
             <h6>Max Feed Force:</h6>
           </div>
-          <p className="col-6">{userData?.characteristics?.maxFeedForce}</p>
+          <p className="col-6">
+            {getUserDataFromStore?.characteristics?.maxFeedForce}
+          </p>
         </div>
         <div className="row">
           <div className="label col-6">
             <h6>Played Games Count:</h6>
           </div>
-          <p className="col-6">{userData?.characteristics?.playedGamesCount}</p>
+          <p className="col-6">
+            {getUserDataFromStore?.characteristics?.playedGamesCount}
+          </p>
         </div>
       </div>
     </>
