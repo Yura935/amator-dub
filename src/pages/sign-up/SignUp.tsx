@@ -74,14 +74,14 @@ const SignUpPage = () => {
             team: "",
             location: "",
             characteristics: {
-              userHeight: null,
-              userWeight: null,
-              maxJumpHeight: null,
-              maxFeedForce: null,
-              playedGamesCount: null,
-              serving: null,
-              aces: null,
-              blocks: null,
+              userHeight: "",
+              userWeight: "",
+              maxJumpHeight: "",
+              maxFeedForce: "",
+              playedGamesCount: "",
+              serving: "",
+              aces: "",
+              blocks: "",
             },
           });
           console.log("Document written with ID: ", docRef);

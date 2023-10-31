@@ -1,11 +1,21 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-import { useStore } from "../utils/storeManager";
+import { getCurrentUserFromStore } from "../utils/storeManager";
 
 export const Guard = () => {
   const uid = localStorage.getItem("uid");
-  const { getCurrentUserFromStore } = useStore();
-  const isAuthenticated = getCurrentUserFromStore !== null;
+  const currentUser = useSelector(getCurrentUserFromStore);
+  const isAuthenticated = currentUser !== null;
+  const location = useLocation();
 
-  return uid || isAuthenticated ? <Outlet /> : <Navigate to="/signIn" />;
+  return uid || isAuthenticated ? (
+    location.pathname !== "/" ? (
+      <Outlet />
+    ) : (
+      <Navigate to="/user" />
+    )
+  ) : (
+    <Navigate to="/signIn" />
+  );
 };

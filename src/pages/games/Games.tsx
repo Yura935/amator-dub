@@ -1,58 +1,43 @@
-import {
-  Button,
-  Input,
-  Modal,
-  ModalDialog,
-  Textarea,
-  Typography,
-} from "@mui/joy";
+import { Col, Nav, Tab } from "react-bootstrap";
 import { addDoc, collection, getDocs } from "firebase/firestore";
-import { useContext, useEffect, useState } from "react";
-import DatePicker from "react-datepicker";
-import moment from "moment";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { Button } from "@mui/joy";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
+import {
+  getActiveGamesFromStore,
+  getFinishedGamesFromStore,
+  getIncomingGamesFromStore,
+  useStore,
+} from "../../utils/storeManager";
+import Game from "../../components/game/Game";
+import GamePopup from "./gamePopup/GamePopup";
 import { IGame } from "../../interfaces/game";
 import Loader from "../../components/loader/Loader";
 import { MainContext } from "../../context/main/mainContext";
 import Toastr from "../../components/toastr/Toastr";
-import ToggleGroupToolbar from "../../components/toggleGroupYoolbar/ToggleGroupToolbar";
 import { db } from "../../firebase";
-import { useStore } from "../../utils/storeManager";
 
 import classes from "./Games.module.scss";
 
 const GamesPage = () => {
   const { isLoading, setLoadingStatus } = useContext(MainContext);
-  const [name, setName] = useState("");
-  const [maxPlayersCount, setMaxPlayersCount] = useState<string | number>("");
-  const [location, setLocation] = useState("");
-  const [date, setDate] = useState<Date | null>(null);
-  const [notes, setNotes] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formats, setFormats] = useState<string[]>([]);
-  const [color, setColor] = useState("");
-  const {
-    getUserDataFromStore,
-    addNewGameToStore,
-    getAvailableGamesFromStore,
-  } = useStore();
-  const [games, setGames] = useState<IGame[]>([...getAvailableGamesFromStore]);
 
-  const textareaConfigHandler = (formats: string[], color: string) => {
-    setFormats(formats);
-    setColor(color);
-  };
-
-  const getUsers = async () => {
+  const [displayingType, setDisplayingType] = useState("list");
+  const { addNewGameToStore } = useStore();
+  const activeGames = useSelector(getActiveGamesFromStore);
+  const incomingGames = useSelector(getIncomingGamesFromStore);
+  const finishedGames = useSelector(getFinishedGamesFromStore);
+  const [games, setGames] = useState<IGame[]>([...activeGames]);
+  const getGames = async () => {
     await getDocs(collection(db, "games")).then((querySnapshot) => {
       const games = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
         docId: doc.id,
       }));
-      const availableGames = (games as IGame[]).filter(
-        (game) => game.status === "active"
-      );
+      const availableGames = [...(games as IGame[])];
       setGames(availableGames);
       addNewGameToStore(availableGames);
       setLoadingStatus(false);
@@ -61,202 +46,153 @@ const GamesPage = () => {
 
   useEffect(() => {
     setLoadingStatus(true);
-    getUsers();
+    getGames();
   }, []);
 
-  const saveNewGame = async (event: any) => {
-    try {
-      const isItalic = formats.find((format) => format === "italic");
-      const isBold = formats.find((format) => format === "bold");
-      const isUnderlined = formats.find((format) => format === "underlined");
-      const newGame: IGame = {
-        name,
-        status: "active",
-        maxPlayersCount,
-        playersCount: 0,
-        players: [],
-        date: date ? date.toString() : "",
-        createdBy: getUserDataFromStore?.fullName,
-        createdDate: moment().toString(),
-        location,
-        notes: {
-          text: notes,
-          fontStyle: isItalic ? "italic" : "normal",
-          fontWeight: isBold ? "bold" : "normal",
-          textDecoration: isUnderlined ? "underline" : "none",
-          color,
-        },
-      };
-      console.log(newGame);
-      const docRef = await addDoc(collection(db, "games"), newGame);
-      setGames((prevState) => {
-        const updatedState = [newGame, ...prevState];
-        addNewGameToStore(updatedState);
+  const saveNewGame = useCallback(async (game: IGame) => {
+    console.log(game);
+    // if (hallName && maxPlayersCount && date && location) {
+    //   try {
+    // const isItalic = formats.find((format) => format === "italic");
+    // const isBold = formats.find((format) => format === "bold");
+    // const isUnderlined = formats.find((format) => format === "underlined");
+    // const newGame: IGame = {
+    //   hallName,
+    //   status: "active",
+    //   maxPlayersCount,
+    //   playersCount: 0,
+    //   players: [],
+    //   date: date ? date.toString() : "",
+    //   createdBy: getUserDataFromStore?.fullName,
+    //   createdDate: moment().toString(),
+    //   location,
+    //   notes: {
+    //     text: notes,
+    //     fontStyle: isItalic ? "italic" : "normal",
+    //     fontWeight: isBold ? "bold" : "normal",
+    //     textDecoration: isUnderlined ? "underline" : "none",
+    //     color,
+    //   },
+    // };
+    //     console.log(newGame);
+    //     const docRef = await addDoc(collection(db, "games"), newGame);
+    //     setGames((prevState) => {
+    //       const updatedState = [newGame, ...prevState];
+    //       addNewGameToStore(updatedState);
 
-        return {
-          ...prevState,
-          ...updatedState,
-        };
-      });
-      toast.success(<Toastr itemName="Success" message="Game was created" />);
-      setIsModalOpen(false);
-      console.log("Document written with ID: ", docRef);
-    } catch (e: any) {
-      toast.error(<Toastr itemName="Error" message={e} />);
-      console.error("Error adding document: ", e);
-    }
+    //       return updatedState;
+    //     });
+    //     toast.success(<Toastr itemName="Success" message="Game was created" />);
+    //     setIsModalOpen(false);
+    //     console.log("Document written with ID: ", docRef);
+    //   } catch (e: any) {
+    //     toast.error(<Toastr itemName="Error" message={e} />);
+    //     console.error("Error adding document: ", e);
+    //   }
+    // }
+  }, []);
+
+  const onSelectGamesFilter = (eventKey: string | null) => {
+    eventKey === "active" && setGames(activeGames);
+    eventKey === "incoming" && setGames(incomingGames);
+    eventKey === "finished" && setGames(finishedGames);
   };
 
-  const modal = (
-    <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-      <ModalDialog
-        aria-labelledby="basic-modal-dialog-title"
-        aria-describedby="basic-modal-dialog-description"
-      >
-        <Typography id="basic-modal-dialog-title" level="h2">
-          Creating new game
-        </Typography>
-        <section className={classes["modal-content"]}>
-          <div className="row mb-3">
-            <label className="mb-1" htmlFor="gameName">
-              Game name:
-            </label>
-            <Input
-              id="gameName"
-              placeholder="Enter game name"
-              required
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-            />
-          </div>
-          <div className="row mb-3">
-            <label className="mb-1" htmlFor="maxPlayersCount">
-              Players count (max):
-            </label>
-            <div className="d-flex align-items-center p-0">
-              <Input
-                sx={{
-                  width: "80%",
-                  marginRight: "10px",
-                }}
-                type="number"
-                id="maxPlayersCount"
-                required
-                placeholder="number"
-                value={maxPlayersCount}
-                onChange={(event) => setMaxPlayersCount(event.target.value)}
-                onBlur={(event) =>
-                  setMaxPlayersCount(
-                    Number(event.target.value) < 2 ? 2 : event.target.value
-                  )
-                }
-              />
-              <span>players</span>
-            </div>
-          </div>
-          <div className="row mb-3">
-            <div className="col-6">
-              <label className="mb-1" htmlFor="location">
-                Location:
-              </label>
-              <Input
-                id="location"
-                required
-                placeholder="Enter game location"
-                value={location}
-                onChange={(event) => setLocation(event.target.value)}
-              />
-            </div>
-            <div className="col-6 row">
-              <label className="mb-1" htmlFor="date">
-                Date:
-              </label>
-              <DatePicker
-                id="date"
-                required
-                placeholderText="DD/MM/YYYY"
-                dateFormat="dd/MM/yyyy"
-                selected={date}
-                onChange={(date: any) => setDate(date)}
-                customInput={<Input />}
-              />
-            </div>
-          </div>
-          <div className="row mb-3">
-            <div className="d-flex align-items-center mb-3 p-0">
-              <label className="mb-1" htmlFor="notes">
-                Notes:
-              </label>
-              <ToggleGroupToolbar onHandler={textareaConfigHandler} />
-            </div>
-            <Textarea
-              sx={{
-                minHeight: "100px",
-                color,
-                fontWeight: formats.find((format) => format === "bold")
-                  ? "bold"
-                  : "normal",
-                fontStyle: formats.find((format) => format === "italic")
-                  ? "italic"
-                  : "normal",
-                textDecoration: formats.find(
-                  (format) => format === "underlined"
-                )
-                  ? "underline"
-                  : "none",
-              }}
-              id="notes"
-              value={notes}
-              onChange={(event) => setNotes(event.target.value)}
-            />
-          </div>
-        </section>
-        <section className="modal-buttons d-flex justify-content-end">
-          <Button
-            color="primary"
-            sx={{ marginRight: "20px" }}
-            aria-label=""
-            type="submit"
-            onClick={saveNewGame}
-          >
-            Create
-          </Button>
-          <Button
-            color="neutral"
-            aria-label=""
-            onClick={() => setIsModalOpen(false)}
-          >
-            Cancel
-          </Button>
-        </section>
-      </ModalDialog>
-    </Modal>
-  );
+  const onCloseHandler = useCallback(() => setIsModalOpen(false), []);
 
   return (
     <>
-      <section className={classes.content}>
-        <div className={classes.actions}>
-          <Button onClick={() => setIsModalOpen(true)}>Add game</Button>
-        </div>
-        <div className={classes.games}>
-          {!isLoading && games.length === 0 && (
-            <div className={classes.empty}>
-              <img
-                className={classes.helperIcon}
-                src="./helper.svg"
-                alt="helper icon"
-              />
-              <h4>Games Empty</h4>
-              <p>Click &quot;Add game&quot; for creating new game!</p>
+      <div className={classes.actions}>
+        <div className={classes.switch}>
+          <div
+            className={`${classes.switchCase} ${
+              displayingType === "list" ? classes.active : ""
+            }`}
+            onClick={() => setDisplayingType("list")}
+          >
+            <div className={classes["switchCase__icon"]}>
+              <div className={classes.line}></div>
+              <div className={classes.line}></div>
+              <div className={classes.line}></div>
             </div>
-          )}
-          {!isLoading && games.length > 0 && (
-            <div className={classes.gamesItems}></div>
-          )}
+            <p className={classes["switchCase__label"]}>List</p>
+          </div>
+          <div
+            className={`${classes.switchCase} ${
+              displayingType === "calendar" ? classes.active : ""
+            }`}
+            onClick={() => setDisplayingType("calendar")}
+          >
+            <img
+              className={classes["switchCase__icon"]}
+              src="./calendarIcon.svg"
+            />
+            <p className={classes["switchCase__label"]}>Calendar</p>
+          </div>
         </div>
+        <Button onClick={() => setIsModalOpen(true)}>Add game</Button>
+      </div>
+      <section className={classes.tabs}>
+        <Tab.Container
+          id="left-tabs-example"
+          defaultActiveKey="active"
+          onSelect={onSelectGamesFilter}
+        >
+          <Col sm={2} style={{ paddingRight: "10px" }}>
+            <Nav variant="pills" className="flex-column">
+              <Nav.Item>
+                <Nav.Link className={classes.navLink} eventKey="active">
+                  Active
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link className={classes.navLink} eventKey="inProgress">
+                  In Progress
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link className={classes.navLink} eventKey="Closed">
+                  Closed
+                </Nav.Link>
+              </Nav.Item>
+            </Nav>
+          </Col>
+          <Col sm={10}>
+            <Tab.Content>
+              <section className={classes.content}>
+                <div className={classes.games}>
+                  {!isLoading && games.length === 0 && (
+                    <div className={classes.empty}>
+                      <img
+                        className={classes.helperIcon}
+                        src="./helper.svg"
+                        alt="helper icon"
+                      />
+                      <h4>Games Empty</h4>
+                      <p>Click &quot;Add game&quot; for creating new game!</p>
+                    </div>
+                  )}
+                  {!isLoading && games.length > 0 && (
+                    <div className={classes.gamesItems}>
+                      {games.map((game) => (
+                        <Game key={game.docId} game={game} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </section>
+            </Tab.Content>
+          </Col>
+        </Tab.Container>
       </section>
-      {modal}
+
+      {
+        <GamePopup
+          open={isModalOpen}
+          onClose={onCloseHandler}
+          onCreateGame={saveNewGame}
+        />
+      }
       {isLoading && <Loader />}
     </>
   );

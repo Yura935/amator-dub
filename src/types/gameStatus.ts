@@ -1,1 +1,1 @@
-export type GameStatus = "active" | "inProgress" | "closed";
+export type GameStatus = "active" | "incoming" | "finished";

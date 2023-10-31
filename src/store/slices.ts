@@ -3,6 +3,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { IRootState } from "./interfaces";
 
 import { IGame } from "../interfaces/game";
+import { IPlayer } from "../interfaces/player";
 import { IUser } from "../interfaces/user";
 
 const initialState: IRootState = {
@@ -62,6 +63,19 @@ export const gamesSlice = createSlice({
   reducers: {
     addNewGame: (state, action: PayloadAction<IGame[]>) => {
       (state.games as IGame[]) = action.payload;
+    },
+    joinGame: (state, action: PayloadAction<IPlayer>) => {
+      const prevState = { ...state };
+      const currentGame = prevState.games.find(
+        (game) => game.docId === action.payload.gameId
+      );
+      if (currentGame) {
+        currentGame.players?.push(action.payload);
+        currentGame.playersCount = (
+          Number(currentGame.playersCount) + 1
+        ).toString();
+        state.games = prevState.games;
+      }
     },
   },
 });

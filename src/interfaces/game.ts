@@ -1,9 +1,10 @@
+import { GameLevel } from "../types/gameLevel";
 import { GameStatus } from "../types/gameStatus";
 import { INote } from "./note";
 import { IPlayer } from "./player";
 
 export interface IGame {
-  name: string;
+  hallName: string;
   status: GameStatus;
   playersCount: number | string;
   maxPlayersCount: number | string;
@@ -13,5 +14,6 @@ export interface IGame {
   createdDate: string;
   location: string;
   notes: INote;
+  level: GameLevel;
   docId?: string;
 }

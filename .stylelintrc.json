@@ -6,6 +6,7 @@
     "declaration-empty-line-before": "never",
     "selector-class-pattern": null,
     "media-feature-name-no-unknown": true,
-    "declaration-no-important": null
+    "declaration-no-important": null,
+    "value-no-vendor-prefix": null
   }
 }

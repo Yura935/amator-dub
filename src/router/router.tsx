@@ -1,15 +1,17 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import EditUserProfilePage from "../pages/user/edit/EditUserProfile";
+import GameDetailsPage from "../pages/games/gameDetails/GameDetails";
+import GamesPage from "../pages/games/Games";
+import { Guard } from "../guards/Guard";
 import LoginPage from "../pages/sign-in/SignIn";
 import MainPage from "../pages/main/Main";
 import NotFoundPage from "../pages/not-found/Not-found";
+import OverallRatingPage from "../pages/overall-rating/OverallRating";
 import SignUpPage from "../pages/sign-up/SignUp";
 import UserProfilePage from "../pages/user/UserProfile";
 import ViewUserProfilePage from "../pages/user/view/ViewUserProfile";
-import { Guard } from "../guards/Guard";
-import GamesPage from "../pages/games/Games";
-import OverallRatingPage from "../pages/overall-rating/OverallRating";
+
 const router = (
   <BrowserRouter>
     <Routes>
@@ -20,6 +22,7 @@ const router = (
             <Route path="edit" element={<EditUserProfilePage />} />
           </Route>
           <Route path="games" element={<GamesPage />} />
+          <Route path="games/:docId" element={<GameDetailsPage />} />
           <Route path="overall-rating" element={<OverallRatingPage />} />
         </Route>
       </Route>

@@ -1,0 +1,74 @@
+@import "../../styles/mixins/flexbox";
+
+.game {
+  height: 250px;
+  position: relative;
+  margin-bottom: 20px;
+  background-color: #fff;
+
+  @include flexbox(row, unset, unset, nowrap);
+
+  .image {
+    height: inherit;
+    width: 400px;
+
+    img {
+      width: inherit;
+      height: inherit;
+    }
+  }
+
+  .header {
+    @include flexbox(row, space-between, unset, nowrap);
+  }
+
+  .info {
+    width: 100%;
+    padding: 20px 30px 0;
+
+    .created {
+      font-style: italic;
+      color: darkgray;
+
+      @include flexbox(column, unset, end, nowrap);
+
+      .postedDate {
+        margin-bottom: 1px;
+        font-weight: bold;
+        font-size: 16px;
+      }
+    }
+
+    &Details {
+      @include flexbox(row, unset, center, nowrap);
+
+      & > div {
+        margin-right: 15px;
+      }
+    }
+  }
+
+  .notes {
+    height: 100px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4; /* start showing ellipsis when 4rd line is reached */
+    white-space: pre-wrap; /* let the text wrap preserving spaces */
+    margin: 5px 0;
+  }
+
+  .footer {
+    @include flexbox(row, space-between, center, nowrap);
+  }
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+// .game:hover {
+//   background-color: rgba(255, 142, 28, 0.76);
+// }

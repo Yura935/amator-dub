@@ -4,28 +4,28 @@ import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import PageNotFound from "./Not-found";
 
 describe("Not-found component", () => {
-    let component: RenderResult;
+  let component: RenderResult;
 
-    const routesConfig = [{ path: "*", element: <PageNotFound /> }];
+  const routesConfig = [{ path: "*", element: <PageNotFound /> }];
 
-    beforeEach(() => {
-        const router = createMemoryRouter(routesConfig, {
-            initialEntries: ["/not"]
-        });
-        component = render(<RouterProvider router={router} />);
+  beforeEach(() => {
+    const router = createMemoryRouter(routesConfig, {
+      initialEntries: ["/not"],
     });
+    component = render(<RouterProvider router={router} />);
+  });
 
-    afterEach(async () => {
-        await component.unmount();
-    });
+  afterEach(async () => {
+    await component.unmount();
+  });
 
-    test("should mount component properly", () => {
-        expect(component).toBeTruthy();
-    });
+  test("should mount component properly", () => {
+    expect(component).toBeTruthy();
+  });
 
-    test("should show message", () => {
-        const message = screen.getByText("404 Page not found");
+  test("should show message", () => {
+    const message = screen.getByText("404 Page not found");
 
-        expect(message).toBeInTheDocument();
-    });
+    expect(message).toBeInTheDocument();
+  });
 });

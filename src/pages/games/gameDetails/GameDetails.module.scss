@@ -1,0 +1,82 @@
+@import "../../../styles/mixins/flexbox";
+
+.details {
+  border: 1px solid gray;
+  padding: 50px 30px 20px;
+  background-color: #fff;
+
+  @include flexbox(row, unset, unset, nowrap);
+
+  .calendar {
+    width: 70px;
+    font-weight: bold;
+    cursor: default;
+    margin-right: 30px;
+
+    &Header {
+      height: 20px;
+      background-color: #0b6bcb;
+      color: #fff;
+      text-align: center;
+      line-height: 20px;
+      border: 1px solid darkgray;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+
+    &Body {
+      height: 65px;
+      border: 1px solid darkgray;
+      border-top: none;
+      border-bottom: 2px solid darkgray;
+      font-size: 28px;
+
+      @include flexbox(row, center, center, nowrap);
+    }
+  }
+
+  .body {
+    width: 100%;
+
+    .name {
+      margin-bottom: 20px;
+    }
+
+    table {
+      tr,
+      td {
+        @include flexbox(row, unset, center, nowrap);
+      }
+
+      .icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+      }
+
+      .locationIcon {
+        background: url("../../../../public/locationIcon.svg");
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      .dateIcon {
+        background: url("../../../../public/calendarIcon.svg");
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      .loudIcon {
+        background: url("../../../../public/loudspeaker.svg");
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      .notesIcon {
+        background: url("../../../../public/infoIcon.svg");
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+    }
+  }
+}

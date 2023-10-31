@@ -67,6 +67,7 @@ const LoginPage = () => {
       })
       .catch((err) => {
         console.log(err);
+        setLoadingStatus(false);
         toast.error(
           <Toastr itemName="Sign In error" message="Wrong login or password." />
         );

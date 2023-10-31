@@ -1,24 +1,13 @@
 @import "../../styles/mixins/flexbox";
 
 .content {
-  padding-top: 50px;
-
-  .actions {
-    width: 100%;
-    border: 1px solid gray;
-    padding: 10px;
-    border-radius: 5px;
-
-    @include flexbox(row, end, center, nowrap);
-  }
-
   .games {
     .empty {
       width: 100%;
       height: 250px;
-      border: 3px dashed gray;
-      margin-top: 20px;
+      border: 3px dashed #fff;
       position: relative;
+      color: #fff;
 
       @include flexbox(column, center, center, nowrap);
 
@@ -33,17 +22,64 @@
 
     &Items {
       min-height: 200px;
-      margin-top: 20px;
-      border: 2px solid black;
     }
   }
 }
 
-.modal-content {
-  min-width: 660px;
-  padding: 0 40px;
+.actions {
+  width: 100%;
+  border: 1px solid gray;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 50px;
+  background-color: #fff;
 
-  label {
-    padding: 0;
+  @include flexbox(row, space-between, center, nowrap);
+
+  .switch {
+    @include flexbox(row, unset, center, nowrap);
+
+    &Case {
+      border: 1px solid black;
+      padding: 5px;
+      cursor: pointer;
+
+      @include flexbox(row, unset, center, nowrap);
+
+      &__icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+
+        @include flexbox(column, center, center, nowrap);
+
+        .line {
+          width: 100%;
+          border: 1px solid black;
+          margin: 2px;
+        }
+      }
+
+      &__label {
+        margin-bottom: 0;
+      }
+    }
+
+    &Case.active {
+      background-color: #2b5876;
+      color: #fff;
+    }
+  }
+}
+
+.tabs {
+  width: 100%;
+  padding-top: 30px;
+
+  @include flexbox(row, unset, unset, nowrap);
+
+  .navLink,
+  .navLink:hover {
+    color: #fff;
   }
 }

@@ -2,16 +2,17 @@ import { Button, Modal, ModalDialog, Typography } from "@mui/joy";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import { useContext } from "react";
+import { useSelector } from "react-redux";
 
 import Header from "../../components/header/Header";
 import { MainContext } from "../../context/main/mainContext";
-import { useStore } from "../../utils/storeManager";
+import { getUserDataFromStore } from "../../utils/storeManager";
 
 import classes from "./Main.module.scss";
 
 const MainPage = () => {
   const { isDeleteUserModalShown, hideModal } = useContext(MainContext);
-  const { getUserDataFromStore } = useStore();
+  const userData = useSelector(getUserDataFromStore);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -25,9 +26,7 @@ const MainPage = () => {
           Delete Account
         </Typography>
         <section>
-          <h5 className="text-center">
-            Account: {getUserDataFromStore?.email}
-          </h5>
+          <h5 className="text-center">Account: {userData?.email}</h5>
           <p className="text-center">will be deleted!</p>
         </section>
         <section className="modal-buttons d-flex justify-content-evenly">
@@ -59,7 +58,7 @@ const MainPage = () => {
             className={classes.navLink}
             onClick={() => navigate("/games")}
           >
-            Available Games
+            Games
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>

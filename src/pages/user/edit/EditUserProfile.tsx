@@ -3,18 +3,20 @@ import { doc, updateDoc } from "firebase/firestore";
 import { Button } from "@mui/joy";
 import { Form } from "react-bootstrap";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
+import { getUserDataFromStore, useStore } from "../../../utils/storeManager";
 import Toastr from "../../../components/toastr/Toastr";
 import { db } from "../../../firebase";
-import { useStore } from "../../../utils/storeManager";
 
 import classes from "./EditUserProfile.module.scss";
 
 const EditUserProfilePage = () => {
-  const { getUserDataFromStore, addUserDataToStore } = useStore();
+  const { addUserDataToStore } = useStore();
+  const userData = useSelector(getUserDataFromStore);
 
   const [userProfileData, setUserProfileData] = useState({
-    ...getUserDataFromStore,
+    ...userData,
   });
 
   const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
@@ -69,8 +71,8 @@ const EditUserProfilePage = () => {
     <Form className="form" onSubmit={onSubmitHandler}>
       <div className={classes["personalInfo"]}>
         <h5>Personal Information</h5>
-        <div className="row mb-2">
-          <div className="label col-6">
+        <div className="d-flex align-items-center mb-2">
+          <div className="label col-4">
             <h6>Email:</h6>
           </div>
           <input
@@ -82,8 +84,21 @@ const EditUserProfilePage = () => {
             onChange={onChangeHandler}
           />
         </div>
-        <div className="row mb-2">
-          <div className="label col-6">
+        <div className="d-flex align-items-center mb-2">
+          <div className="label col-4">
+            <h6>City:</h6>
+          </div>
+          <input
+            className="form-control"
+            type="text"
+            name="city"
+            id="city"
+            value={userProfileData?.city}
+            onChange={onChangeHandler}
+          />
+        </div>
+        <div className="d-flex align-items-center mb-2">
+          <div className="label col-4">
             <h6>Location:</h6>
           </div>
           <input
@@ -95,12 +110,12 @@ const EditUserProfilePage = () => {
             onChange={onChangeHandler}
           />
         </div>
-        <div className="row mb-2">
-          <div className="label col-6">
+        <div className="d-flex align-items-center mb-2">
+          <div className="label col-4">
             <h6>Age:</h6>
           </div>
           <input
-            className="form-control col-8"
+            className="form-control"
             type="number"
             name="age"
             id="age"
@@ -109,8 +124,8 @@ const EditUserProfilePage = () => {
             onChange={onChangeHandler}
           />
         </div>
-        <div className="row mb-2">
-          <div className="label col-6">
+        <div className="d-flex align-items-center mb-2">
+          <div className="label col-4">
             <h6>Team:</h6>
           </div>
           <input
@@ -125,8 +140,8 @@ const EditUserProfilePage = () => {
       </div>
       <div className={classes["userCharacteristics"]}>
         <h5>Characteristics</h5>
-        <div className="row mb-2">
-          <div className="label col-6">
+        <div className="d-flex align-items-center mb-2">
+          <div className="label col-4">
             <h6>Player Height:</h6>
           </div>
           <input
@@ -139,8 +154,8 @@ const EditUserProfilePage = () => {
             onChange={onChangeHandler}
           />
         </div>
-        <div className="row mb-2">
-          <div className="label col-6">
+        <div className="d-flex align-items-center mb-2">
+          <div className="label col-4">
             <h6>Player Weight:</h6>
           </div>
           <input
@@ -153,8 +168,8 @@ const EditUserProfilePage = () => {
             onChange={onChangeHandler}
           />
         </div>
-        <div className="row mb-2">
-          <div className="label col-6">
+        <div className="d-flex align-items-center mb-2">
+          <div className="label col-4">
             <h6>Max Jump Height (cm):</h6>
           </div>
           <input
@@ -167,8 +182,8 @@ const EditUserProfilePage = () => {
             onChange={onChangeHandler}
           />
         </div>
-        <div className="row mb-2">
-          <div className="label col-6">
+        <div className="d-flex align-items-center mb-2">
+          <div className="label col-4">
             <h6>Max Feed Force:</h6>
           </div>
           <input
@@ -181,8 +196,8 @@ const EditUserProfilePage = () => {
             onChange={onChangeHandler}
           />
         </div>
-        <div className="row mb-2">
-          <div className="label col-6">
+        <div className="d-flex align-items-center mb-2">
+          <div className="label col-4">
             <h6>Played Games Count:</h6>
           </div>
           <input

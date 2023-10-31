@@ -5,9 +5,10 @@ import moment from "moment";
 
 import Loader from "../../components/loader/Loader";
 import { MainContext } from "../../context/main/mainContext";
-import { useStore } from "../../utils/storeManager";
+import { getUserDataFromStore } from "../../utils/storeManager";
 
 import classes from "./UserProfile.module.scss";
+import { useSelector } from "react-redux";
 
 const UserProfilePage = () => {
   const DOMAIN = process.env.AMATOR_DUB_DOMAIN;
@@ -18,15 +19,13 @@ const UserProfilePage = () => {
   const [mode, setMode] = useState(currentLocation[currentLocation.length - 1]);
   const { showDeleteUserModal } = useContext(MainContext);
   const navigate = useNavigate();
-  const { getUserDataFromStore } = useStore();
+  const userData = useSelector(getUserDataFromStore);
 
   useEffect(() => {
-    !getUserDataFromStore.uid
-      ? setLoadingStatus(true)
-      : setLoadingStatus(false);
+    !userData.uid ? setLoadingStatus(true) : setLoadingStatus(false);
     navigate("/user");
     setMode("user");
-  }, [getUserDataFromStore]);
+  }, [userData]);
 
   const showUserProfile = () => {
     setMode("user");
@@ -90,13 +89,11 @@ const UserProfilePage = () => {
                 />
               </div>
               <div className={classes["media-body"]}>
-                <h4>{getUserDataFromStore?.fullName}</h4>
+                <h4>{userData?.fullName}</h4>
                 <div className="d-flex">
                   <div className={classes.registrationDate}></div>
                   Registered from{" "}
-                  {moment(getUserDataFromStore?.registrationDate).format(
-                    "MMMM Do YYYY"
-                  )}
+                  {moment(userData?.registrationDate).format("MMMM Do YYYY")}
                 </div>
               </div>
             </div>
