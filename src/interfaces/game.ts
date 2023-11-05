@@ -9,10 +9,12 @@ export interface IGame {
   playersCount: number | string;
   maxPlayersCount: number | string;
   players: IPlayer[];
-  date: string;
+  startDate: string;
+  endDate: string;
   createdBy: string;
   createdDate: string;
   location: string;
+  price: string | number;
   notes: INote;
   level: GameLevel;
   docId?: string;

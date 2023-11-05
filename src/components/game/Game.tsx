@@ -1,51 +1,23 @@
-import { Avatar, AvatarGroup, Button, Tooltip } from "@mui/joy";
-import { doc, updateDoc } from "firebase/firestore";
-import { useMemo, useState } from "react";
+import { Button } from "@mui/joy";
 import moment from "moment";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 
-import { getUserDataFromStore, useStore } from "../../utils/storeManager";
 import { IGame } from "../../interfaces/game";
-import { IPlayer } from "../../interfaces/player";
-import { db } from "../../firebase";
+import { useStore } from "../../utils/storeManager";
 
 import classes from "./Game.module.scss";
 
 const Game = (props: { game: IGame }) => {
   const { game } = props;
   const navigate = useNavigate();
-  const { addPlayerToGame } = useStore();
-  const userData = useSelector(getUserDataFromStore);
-
-  const [isYouPlayer, setIsYouPlayer] = useState<boolean>(
-    Boolean(
-      game.players.length > 0 &&
-        game.players.find((player) => player.uid === userData.uid)
-    )
-  );
+  const { addCurrentGameToStore } = useStore();
   const randomNumber = useMemo(() => Math.round(Math.random() * 2 + 1), []);
   const imageSrc = useMemo(() => `./Hall${randomNumber}.jfif`, []);
 
-  const joinGame = async (event: any) => {
-    const player: IPlayer = {
-      uid: userData.uid,
-      fullName: userData.fullName,
-      avatar: userData.avatar,
-      gameId: event.target.id,
-    };
-
-    const updatedGame = { ...game };
-    updatedGame.players = [...updatedGame.players, player];
-    updatedGame.playersCount = (
-      Number(updatedGame.playersCount) + 1
-    ).toString();
-    updateDoc(doc(db, "games", event.target.id), updatedGame)
-      .then(() => {
-        addPlayerToGame(player);
-        setIsYouPlayer(true);
-      })
-      .catch((err) => console.log(err));
+  const goToDetailsPage = () => {
+    addCurrentGameToStore(game);
+    navigate(`${game.docId}`);
   };
 
   return (
@@ -88,7 +60,7 @@ const Game = (props: { game: IGame }) => {
               src="./calendarIcon.svg"
               alt="location icon"
             />
-            <span>{moment(game.date).format("DD/MM/yyyy HH:mm")}</span>
+            <span>{moment(game.startDate).format("DD/MM/yyyy HH:mm")}</span>
           </div>
         </div>
         <div
@@ -114,15 +86,7 @@ const Game = (props: { game: IGame }) => {
           {/* <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" /> */}
           {/* <Avatar>+3</Avatar> */}
           {/* </AvatarGroup> */}
-          {/* {!isYouPlayer && (
-            <Button id={game.docId} onClick={joinGame}>
-              Join
-            </Button>
-          )}
-          {isYouPlayer && <Button disabled>You already joined!</Button>} */}
-          <Button onClick={() => navigate(`${game.docId}`)}>
-            Details &gt;
-          </Button>
+          <Button onClick={goToDetailsPage}>Details &gt;</Button>
         </div>
       </div>
     </div>

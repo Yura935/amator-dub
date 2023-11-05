@@ -20,3 +20,11 @@ a {
 body {
   background-color: #2b5876;
 }
+
+.row {
+  margin-bottom: 10px;
+}
+
+.react-datepicker-popper {
+  z-index: 1024;
+}

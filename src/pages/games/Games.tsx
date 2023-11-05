@@ -49,48 +49,23 @@ const GamesPage = () => {
     getGames();
   }, []);
 
-  const saveNewGame = useCallback(async (game: IGame) => {
-    console.log(game);
-    // if (hallName && maxPlayersCount && date && location) {
-    //   try {
-    // const isItalic = formats.find((format) => format === "italic");
-    // const isBold = formats.find((format) => format === "bold");
-    // const isUnderlined = formats.find((format) => format === "underlined");
-    // const newGame: IGame = {
-    //   hallName,
-    //   status: "active",
-    //   maxPlayersCount,
-    //   playersCount: 0,
-    //   players: [],
-    //   date: date ? date.toString() : "",
-    //   createdBy: getUserDataFromStore?.fullName,
-    //   createdDate: moment().toString(),
-    //   location,
-    //   notes: {
-    //     text: notes,
-    //     fontStyle: isItalic ? "italic" : "normal",
-    //     fontWeight: isBold ? "bold" : "normal",
-    //     textDecoration: isUnderlined ? "underline" : "none",
-    //     color,
-    //   },
-    // };
-    //     console.log(newGame);
-    //     const docRef = await addDoc(collection(db, "games"), newGame);
-    //     setGames((prevState) => {
-    //       const updatedState = [newGame, ...prevState];
-    //       addNewGameToStore(updatedState);
+  const saveNewGame = async (game: IGame) => {
+    try {
+      const docRef = await addDoc(collection(db, "games"), game);
+      setGames((prevState) => {
+        const updatedState = [game, ...prevState];
+        addNewGameToStore(updatedState);
 
-    //       return updatedState;
-    //     });
-    //     toast.success(<Toastr itemName="Success" message="Game was created" />);
-    //     setIsModalOpen(false);
-    //     console.log("Document written with ID: ", docRef);
-    //   } catch (e: any) {
-    //     toast.error(<Toastr itemName="Error" message={e} />);
-    //     console.error("Error adding document: ", e);
-    //   }
-    // }
-  }, []);
+        return updatedState;
+      });
+      toast.success(<Toastr itemName="Success" message="Game was created" />);
+      setIsModalOpen(false);
+      console.log("Document written with ID: ", docRef);
+    } catch (e: any) {
+      toast.error(<Toastr itemName="Error" message={e} />);
+      console.error("Error adding document: ", e);
+    }
+  };
 
   const onSelectGamesFilter = (eventKey: string | null) => {
     eventKey === "active" && setGames(activeGames);
@@ -141,18 +116,18 @@ const GamesPage = () => {
           <Col sm={2} style={{ paddingRight: "10px" }}>
             <Nav variant="pills" className="flex-column">
               <Nav.Item>
+                <Nav.Link className={classes.navLink} eventKey="incoming">
+                  Incoming
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
                 <Nav.Link className={classes.navLink} eventKey="active">
                   Active
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link className={classes.navLink} eventKey="inProgress">
-                  In Progress
-                </Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link className={classes.navLink} eventKey="Closed">
-                  Closed
+                <Nav.Link className={classes.navLink} eventKey="finished">
+                  Finished
                 </Nav.Link>
               </Nav.Item>
             </Nav>

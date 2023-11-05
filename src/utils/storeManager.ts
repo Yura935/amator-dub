@@ -3,6 +3,7 @@ import { createSelector } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
 
 import {
+  addCurrentGame,
   addCurrentUserUId,
   addNewGame,
   addUserData,
@@ -42,6 +43,10 @@ export const useStore = () => {
     dispatch(joinGame(player));
   };
 
+  const addCurrentGameToStore = (game: IGame) => {
+    dispatch(addCurrentGame(game));
+  };
+
   return {
     addUserDataToStore,
     addCurrentUserToStore,
@@ -49,6 +54,7 @@ export const useStore = () => {
     removeCurrentUserFromStore,
     addNewGameToStore,
     addPlayerToGame,
+    addCurrentGameToStore,
   };
 };
 
@@ -80,4 +86,9 @@ export const getFinishedGamesFromStore = createSelector(
 export const getAllGamesFromStore = createSelector(
   (state: IRootState) => state.games,
   (games) => games.games
+);
+
+export const getCurrentGame = createSelector(
+  (state: IRootState) => state.games,
+  (games) => games.currentGame
 );

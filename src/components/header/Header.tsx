@@ -38,11 +38,10 @@ const Header = () => {
   return (
     <header className={classes.header}>
       <div className={classes["header-logo"]}>
-        <img
-          src="./fullLogo.svg"
-          alt="amatorDub logo"
+        <div
+          className={classes["logoIcon"]}
           onClick={openUserProfilePage}
-        />
+        ></div>
       </div>
       <nav className={classes["header-tabs"]}>
         <FontAwesomeIcon

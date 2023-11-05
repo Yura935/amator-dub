@@ -20,6 +20,12 @@
   animation: spin 1.5s linear infinite;
 }
 
+.spinnerImage {
+  width: 85px;
+  height: 85px;
+  background: url("../../../public/ball.svg");
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);

@@ -9,3 +9,28 @@
     margin-bottom: 20px;
   }
 }
+
+.label {
+  background-color: #2b5876;
+  border-radius: 5px;
+  color: #fff;
+  padding-top: 7px;
+  padding-bottom: 7px;
+
+  h6 {
+    margin-bottom: 0;
+  }
+}
+
+.value {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  margin-bottom: 0;
+  margin-left: 15px;
+  border-bottom: 2px solid gray;
+  border-radius: 5px;
+
+  h6 {
+    margin-bottom: 0;
+  }
+}

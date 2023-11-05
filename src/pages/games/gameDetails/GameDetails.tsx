@@ -1,68 +1,246 @@
+import { Tab, TabList, TabPanel, Tabs } from "@mui/joy";
+import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
+import { useContext, useEffect, useState } from "react";
 import moment from "moment";
+import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import { getAllGamesFromStore } from "../../../utils/storeManager";
+import {
+  getCurrentGame,
+  getUserDataFromStore,
+  useStore,
+} from "../../../utils/storeManager";
+import GameComments from "../../../components/game/gameComments/GameComments";
+import { IGame } from "../../../interfaces/game";
+import { IPlayer } from "../../../interfaces/player";
+import Loader from "../../../components/loader/Loader";
+import { MainContext } from "../../../context/main/mainContext";
+import Players from "../../../components/players/Players";
+import TableSkeleton from "../../../skeletons/TableSkeleton";
+import Toastr from "../../../components/toastr/Toastr";
+import { db } from "../../../firebase";
 
 import classes from "./GameDetails.module.scss";
 
+// eslint-disable-next-line complexity
 const GameDetailsPage = () => {
-  const allGames = useSelector(getAllGamesFromStore);
+  const { isLoading, setLoadingStatus } = useContext(MainContext);
+  const currentGame = useSelector(getCurrentGame);
   const params = useParams();
-  const game = allGames.find((g) => {
-    console.log(g.docId, params.docId);
-    return g.docId === params.docId;
-  });
-  console.log(game);
+  const [game, setGame] = useState<IGame | undefined>(currentGame);
+  const { addPlayerToGame, addCurrentGameToStore } = useStore();
+  const userData = useSelector(getUserDataFromStore);
+  const [isYouPlayer, setIsYouPlayer] = useState<boolean>(
+    Boolean(
+      game?.players &&
+        game.players.length > 0 &&
+        game?.players.find((player) => player.uid === userData.uid)
+    )
+  );
+
+  const joinGameHandler = async (id: string) => {
+    const player: IPlayer = {
+      uid: userData.uid,
+      fullName: userData.fullName,
+      avatar: userData.avatar,
+      gameId: id,
+    };
+
+    const updatedGame = { ...game };
+    updatedGame.players = [...updatedGame.players!, player];
+    updatedGame.playersCount = (
+      Number(updatedGame.playersCount) + 1
+    ).toString();
+    updateDoc(doc(db, "games", id), updatedGame)
+      .then(() => {
+        addPlayerToGame(player);
+        setIsYouPlayer(true);
+        addCurrentGameToStore(updatedGame as IGame);
+        toast.success(<Toastr itemName="Success" message="Game was created" />);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(<Toastr itemName="Error" message={err} />);
+      });
+  };
+
+  const getGame = async () => {
+    await getDocs(collection(db, "games")).then((querySnapshot) => {
+      const games = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        docId: doc.id,
+      }));
+      const currentGame = games.find((g) => g.docId === params.docId);
+      setGame(currentGame as IGame);
+      addCurrentGameToStore(currentGame as IGame);
+      setLoadingStatus(false);
+    });
+  };
+
+  useEffect(() => {
+    if (!game?.docId) {
+      setLoadingStatus(true);
+      getGame();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (game && userData) {
+      setIsYouPlayer(
+        Boolean(
+          game?.players &&
+            game.players.length > 0 &&
+            game.players.find((player) => player.uid === userData.uid)
+        )
+      );
+    }
+  }, [game, userData]);
+
+  const editGame = () => {};
+
+  const deleteGame = () => {};
 
   return (
-    <section className={classes.details}>
-      <div className={classes.calendar}>
-        <div className={classes.calendarHeader}>
-          {moment(game?.date).format("MMM")}
+    <>
+      <section className={classes.details}>
+        <div className={classes.infoBox}>
+          {isLoading && (
+            <div className="placeholder-glow">
+              <h2
+                className="placeholder"
+                style={{ width: "130px", height: "165px" }}
+              ></h2>
+            </div>
+          )}
+          {!isLoading && (
+            <div className={classes.calendar}>
+              <div className={classes.calendarHeader}>
+                {moment(game?.startDate).format("MMMM")}
+              </div>
+              <div className={classes.calendarBody}>
+                {moment(game?.startDate).format("DD")}
+              </div>
+            </div>
+          )}
+          <div className={classes.body}>
+            {isLoading && (
+              <div className="placeholder-glow">
+                <h2
+                  className="placeholder"
+                  style={{
+                    width: "170px",
+                    height: "38px",
+                    marginBottom: "20px",
+                  }}
+                ></h2>
+              </div>
+            )}
+            {!isLoading && <h2 className={classes.name}>{game?.hallName}</h2>}
+            {isLoading && (
+              <TableSkeleton
+                colCount={2}
+                rowCount={5}
+                itemHeight="41px"
+                itemWidth="300px"
+              />
+            )}
+            {!isLoading && (
+              <table className="table">
+                <tbody>
+                  <tr>
+                    <td width="150px">
+                      <div
+                        className={`${classes.locationIcon} ${classes.icon}`}
+                      ></div>
+                      <b>Location</b>
+                    </td>
+                    <td style={{ minWidth: "250px" }}>{game?.location}</td>
+                  </tr>
+                  <tr>
+                    <td width="150px">
+                      <div
+                        className={`${classes.dateIcon} ${classes.icon}`}
+                      ></div>
+                      <b>Date</b>
+                    </td>
+                    <td style={{ minWidth: "250px" }}>
+                      {moment(game?.startDate).format(
+                        "ddd, DD MMM, YYYY HH:mm"
+                      )}{" "}
+                      - {moment(game?.endDate).format("HH:mm")}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="150px">
+                      <div
+                        className={`${classes.priceIcon} ${classes.icon}`}
+                      ></div>
+                      <b>Price</b>
+                    </td>
+                    <td style={{ minWidth: "250px" }}>{game?.price}</td>
+                  </tr>
+                  <tr>
+                    <td width="150px">
+                      <div
+                        className={`${classes.loudIcon} ${classes.icon}`}
+                      ></div>
+                      <b>Notifications</b>
+                    </td>
+                    <td style={{ minWidth: "250px" }}>none</td>
+                  </tr>
+                  <tr>
+                    <td width="150px" style={{ height: "inherit" }}>
+                      <div
+                        className={`${classes.notesIcon} ${classes.icon}`}
+                      ></div>
+                      <b>Notes</b>
+                    </td>
+                    <td style={{ minWidth: "250px", maxWidth: "760px" }}>
+                      {game?.notes.text}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            )}
+          </div>
+          {game?.createdBy === userData.fullName && (
+            <div className={classes.actions}>
+              <div className={`${classes.actionIcon} ${classes.edit}`}></div>
+              <div className={`${classes.actionIcon} ${classes.delete}`}></div>
+            </div>
+          )}
         </div>
-        <div className={classes.calendarBody}>
-          {moment(game?.date).format("DD")}
-        </div>
-      </div>
-      <div className={classes.body}>
-        <h2 className={classes.name}>{game?.hallName}</h2>
-        <table className="table">
-          <tbody>
-            <tr>
-              <td width="115px">
-                <div
-                  className={`${classes.locationIcon} ${classes.icon}`}
-                ></div>
-                <b>Location</b>
-              </td>
-              <td>{game?.location}</td>
-            </tr>
-            <tr>
-              <td width="115px">
-                <div className={`${classes.dateIcon} ${classes.icon}`}></div>
-                <b>Date</b>
-              </td>
-              <td>{moment(game?.date).format("ddd, DD MMM, YYYY HH:mm")}</td>
-            </tr>
-            <tr>
-              <td width="115px">
-                <div className={`${classes.loudIcon} ${classes.icon}`}></div>
-                <b>Notifications</b>
-              </td>
-              <td>none</td>
-            </tr>
-            <tr>
-              <td width="115px">
-                <div className={`${classes.notesIcon} ${classes.icon}`}></div>
-                <b>Notes</b>
-              </td>
-              <td>{game?.notes.text}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+        <hr />
+        <Tabs
+          aria-label="tabs"
+          defaultValue="players"
+          // value={index}
+          // onChange={(event, newValue) => setIndex(newValue as number)}
+        >
+          <TabList variant="soft" underlinePlacement="bottom">
+            <Tab indicatorPlacement="top" value="players">
+              Players
+            </Tab>
+            <Tab indicatorPlacement="top" value="comments">
+              Comments
+            </Tab>
+          </TabList>
+          <TabPanel value="players">
+            {!isLoading && (
+              <Players
+                isUserJoined={isYouPlayer}
+                onJoinGame={joinGameHandler}
+              />
+            )}
+          </TabPanel>
+          <TabPanel value="comments">
+            <GameComments />
+          </TabPanel>
+        </Tabs>
+      </section>
+      {isLoading && <Loader />}
+    </>
   );
 };
 

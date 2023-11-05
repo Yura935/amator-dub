@@ -28,7 +28,8 @@ const ToggleGroupToolbar = (props: {
         borderRadius: "md",
         display: "flex",
         gap: 2,
-        marginLeft: "20px",
+        marginLeft: "10px",
+        marginRight: "10px",
         padding: "5px 10px",
       }}
     >

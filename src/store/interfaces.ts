@@ -8,5 +8,6 @@ export interface IRootState {
   };
   games: {
     games: IGame[];
+    currentGame: IGame;
   };
 }

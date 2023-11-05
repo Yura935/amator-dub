@@ -35,6 +35,28 @@ const initialState: IRootState = {
   },
   games: {
     games: [],
+    currentGame: {
+      hallName: "",
+      createdBy: "",
+      createdDate: "",
+      endDate: "",
+      level: null,
+      location: "",
+      maxPlayersCount: "",
+      notes: {
+        color: "",
+        fontStyle: "",
+        fontWeight: "",
+        text: "",
+        textDecoration: "",
+      },
+      players: [],
+      playersCount: "",
+      price: "",
+      startDate: "",
+      status: "active",
+      docId: "",
+    },
   },
 };
 
@@ -76,6 +98,9 @@ export const gamesSlice = createSlice({
         ).toString();
         state.games = prevState.games;
       }
+    },
+    addCurrentGame: (state, action: PayloadAction<IGame>) => {
+      state.currentGame = action.payload;
     },
   },
 });

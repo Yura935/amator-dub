@@ -2,81 +2,115 @@
 
 .details {
   border: 1px solid gray;
-  padding: 50px 30px 20px;
+  padding: 20px 30px;
+  margin-top: 50px;
   background-color: #fff;
 
-  @include flexbox(row, unset, unset, nowrap);
+  .infoBox {
+    @include flexbox(row, unset, unset, nowrap);
 
-  .calendar {
-    width: 70px;
-    font-weight: bold;
-    cursor: default;
-    margin-right: 30px;
+    .calendar {
+      width: 140px;
+      font-weight: bold;
+      cursor: default;
 
-    &Header {
-      height: 20px;
-      background-color: #0b6bcb;
-      color: #fff;
-      text-align: center;
-      line-height: 20px;
-      border: 1px solid darkgray;
-      border-top-left-radius: 5px;
-      border-top-right-radius: 5px;
+      &Header {
+        height: 40px;
+        background-color: #0b6bcb;
+        color: #fff;
+        text-align: center;
+        line-height: 40px;
+        border: 1px solid darkgray;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+      }
+
+      &Body {
+        height: 125px;
+        border: 1px solid darkgray;
+        border-top: none;
+        border-bottom: 2px solid darkgray;
+        font-size: 56px;
+
+        @include flexbox(row, center, center, nowrap);
+      }
     }
 
-    &Body {
-      height: 65px;
-      border: 1px solid darkgray;
-      border-top: none;
-      border-bottom: 2px solid darkgray;
-      font-size: 28px;
+    .body {
+      width: 100%;
+      padding-left: 30px;
 
-      @include flexbox(row, center, center, nowrap);
+      .name {
+        margin-bottom: 20px;
+      }
+
+      table {
+        tr,
+        td {
+          @include flexbox(row, unset, center, nowrap);
+        }
+
+        .icon {
+          width: 20px;
+          height: 20px;
+          margin-right: 5px;
+        }
+
+        .locationIcon {
+          background: url("../../../../public/locationIcon.svg");
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+
+        .dateIcon {
+          background: url("../../../../public/calendarIcon.svg");
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+
+        .loudIcon {
+          width: 20px;
+          height: 20px;
+          background: url("../../../../public/loudspeaker.svg");
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+
+        .notesIcon {
+          background: url("../../../../public/infoIcon.svg");
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+
+        .priceIcon {
+          background: url("../../../../public/UAH.svg");
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+      }
     }
   }
 
-  .body {
-    width: 100%;
+  .actions {
+    @include flexbox(column, unset, unset, nowrap);
 
-    .name {
-      margin-bottom: 20px;
+    .actionIcon {
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
     }
 
-    table {
-      tr,
-      td {
-        @include flexbox(row, unset, center, nowrap);
-      }
+    .edit {
+      margin-bottom: 10px;
+      background: url("../../../../public/editIcon.svg");
+      background-position: center;
+      background-repeat: no-repeat;
+    }
 
-      .icon {
-        width: 20px;
-        height: 20px;
-        margin-right: 5px;
-      }
-
-      .locationIcon {
-        background: url("../../../../public/locationIcon.svg");
-        background-position: center;
-        background-repeat: no-repeat;
-      }
-
-      .dateIcon {
-        background: url("../../../../public/calendarIcon.svg");
-        background-position: center;
-        background-repeat: no-repeat;
-      }
-
-      .loudIcon {
-        background: url("../../../../public/loudspeaker.svg");
-        background-position: center;
-        background-repeat: no-repeat;
-      }
-
-      .notesIcon {
-        background: url("../../../../public/infoIcon.svg");
-        background-position: center;
-        background-repeat: no-repeat;
-      }
+    .delete {
+      background: url("../../../../public/deleteIcon.svg");
+      background-position: center;
+      background-repeat: no-repeat;
     }
   }
 }
