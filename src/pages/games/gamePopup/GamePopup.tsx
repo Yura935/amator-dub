@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+/* eslint-disable complexity */
 import {
   Button,
   Input,
@@ -8,7 +10,7 @@ import {
   Textarea,
   Typography,
 } from "@mui/joy";
-import { memo, useCallback, useState } from "react";
+import { useEffect, useState } from "react";
 import ReactDatePicker from "react-datepicker";
 import moment from "moment";
 import { useSelector } from "react-redux";
@@ -23,55 +25,156 @@ import classes from "./GamePopup.module.scss";
 const GamePopup = (props: {
   open: boolean;
   onClose: () => void;
-  onCreateGame: (game: IGame) => void;
+  onActionGame: (game: IGame) => void;
+  mode: string;
+  game?: IGame;
+  onGameDelete?: (game: IGame) => void;
 }) => {
-  const [hallName, setHallName] = useState("");
-  const [maxPlayersCount, setMaxPlayersCount] = useState<string | number>("");
-  const [location, setLocation] = useState("");
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  const userData = useSelector(getUserDataFromStore);
+  const initialGameState: IGame = {
+    createdBy: "",
+    createdDate: "",
+    endDate: null,
+    hallName: "",
+    level: null,
+    location: "",
+    maxPlayersCount: "",
+    notes: {
+      color: "",
+      fontStyle: "",
+      fontWeight: "",
+      text: "",
+      textDecoration: "",
+    },
+    players: [],
+    playersCount: "",
+    price: "",
+    startDate: null,
+    status: "active",
+    comments: [],
+    docId: "",
+  };
+  const [game, setGame] = useState<IGame>(initialGameState);
   const [notes, setNotes] = useState("");
   const [formats, setFormats] = useState<string[]>([]);
   const [color, setColor] = useState("");
-  const [level, setLevel] = useState<GameLevel>(null);
-  const [price, setPrice] = useState<string | number>("");
 
-  const userData = useSelector(getUserDataFromStore);
+  const onGameHallNameChangeHandler = (event: any) => {
+    setGame((prevState) => {
+      const updatedGame: IGame = {
+        ...prevState,
+      };
+      updatedGame.hallName = event.target.value;
+      return updatedGame;
+    });
+  };
 
-  const textareaConfigHandler = useCallback(
-    (formats: string[], color: string) => {
-      setFormats(formats);
-      setColor(color);
-    },
-    []
-  );
+  const onGameMaxPlayersCountChangeHandler = (event: any) => {
+    setGame((prevState) => {
+      const updatedGame: IGame = {
+        ...prevState,
+      };
+      updatedGame.maxPlayersCount = event.target.value;
+      return updatedGame;
+    });
+  };
 
-  const onSelectLevelHandler = (
+  const onGameLocationChangeHandler = (event: any) => {
+    setGame((prevState) => {
+      const updatedGame: IGame = {
+        ...prevState,
+      };
+      updatedGame.location = event.target.value;
+      return updatedGame;
+    });
+  };
+
+  const onGamePriceChangeHandler = (event: any) => {
+    setGame((prevState) => {
+      const updatedGame: IGame = {
+        ...prevState,
+      };
+      updatedGame.price = event.target.value;
+      return updatedGame;
+    });
+  };
+
+  const onGameStartDateChangeHandler = (date: any) => {
+    setGame((prevState) => {
+      const updatedGame: IGame = {
+        ...prevState,
+      };
+      updatedGame.startDate = date;
+      return updatedGame;
+    });
+  };
+
+  const onGameEndDateChangeHandler = (date: any) => {
+    setGame((prevState) => {
+      const updatedGame: IGame = {
+        ...prevState,
+      };
+      updatedGame.endDate = date;
+      return updatedGame;
+    });
+  };
+
+  const textareaConfigHandler = (formats: string[], color: string) => {
+    setFormats(formats);
+    setColor(color);
+  };
+
+  const onSelectGameLevelHandler = (
     event: React.SyntheticEvent | null,
     newValue: GameLevel | null
   ) => {
-    setLevel(newValue);
+    setGame((prevState) => {
+      const updatedGame: IGame = {
+        ...prevState,
+      };
+      updatedGame.level = newValue;
+      return updatedGame;
+    });
   };
+
+  const clearFields = () => {
+    setGame(initialGameState);
+    setNotes("");
+    setColor("");
+    setFormats([]);
+  };
+
+  useEffect(() => {
+    if (props.open && (props.mode === "edit" || props.mode === "delete")) {
+      setGame(props.game!);
+    }
+  }, [props.open]);
 
   // eslint-disable-next-line complexity
   const saveNewGame = () => {
-    if (hallName && maxPlayersCount && startDate && endDate && location) {
+    if (
+      game.hallName &&
+      game.maxPlayersCount &&
+      game.startDate &&
+      game.endDate &&
+      game.location
+    ) {
       const isItalic = formats.find((format) => format === "italic");
       const isBold = formats.find((format) => format === "bold");
       const isUnderlined = formats.find((format) => format === "underlined");
       const newGame: IGame = {
-        hallName,
-        status: "active",
-        maxPlayersCount,
+        hallName: game.hallName,
+        status: "incoming",
+        maxPlayersCount: game.maxPlayersCount,
         playersCount: 0,
         players: [],
-        startDate: startDate ? startDate.toString() : "",
-        endDate: endDate ? endDate.toString() : "",
+        startDate: game.startDate ? game.startDate.toString() : null,
+        endDate: game.endDate ? game.endDate.toString() : null,
         createdBy: userData?.fullName,
         createdDate: moment().toString(),
-        location,
-        level,
-        price,
+        location: game.location,
+        level: game.level,
+        price: game.price,
         notes: {
           text: notes,
           fontStyle: isItalic ? "italic" : "normal",
@@ -80,177 +183,231 @@ const GamePopup = (props: {
           color,
         },
       };
-      props.onCreateGame(newGame);
+      props.onActionGame(newGame);
+      clearFields();
     }
   };
 
+  const closeModal = () => {
+    clearFields();
+    props.onClose();
+  };
+
+  const editGameDetails = () => {
+    props.onActionGame(game);
+    closeModal();
+  };
+
+  const deleteGameHandler = () => {
+    props.onGameDelete!(game);
+    closeModal();
+  };
+
   return (
-    <Modal open={props.open} onClose={() => props.onClose()}>
+    <Modal open={props.open} onClose={closeModal}>
       <ModalDialog
         aria-labelledby="basic-modal-dialog-title"
         aria-describedby="basic-modal-dialog-description"
       >
         <Typography id="basic-modal-dialog-title" level="h2">
-          Creating new game
+          {props.mode === "add" && "Creating new game"}
+          {props.mode === "edit" && "Edit game details"}
+          {props.mode === "delete" && "Delete game"}
         </Typography>
-        <section className={classes["modal-content"]}>
-          <div className="row mb-3">
-            <div className="col-6">
-              <label className="mb-1" htmlFor="hallName">
-                Hall name:
-              </label>
-              <Input
-                id="hallName"
-                placeholder="Enter hall name"
-                required
-                value={hallName}
-                onChange={(event) => setHallName(event.target.value)}
-              />
-            </div>
-            <div className="col-6">
-              <label className="mb-1" htmlFor="gameLevel">
-                Game level:
-              </label>
-              <Select
-                id="gameLevel"
-                placeholder="Choose game level"
-                required
-                value={level}
-                onChange={onSelectLevelHandler}
-              >
-                <Option value="High">High</Option>
-                <Option value="Intermediate">Intermediate</Option>
-                <Option value="Low">Low</Option>
-              </Select>
-            </div>
-          </div>
-          <div className="row mb-3">
-            <div className="col-6">
-              <label className="mb-1" htmlFor="maxPlayersCount">
-                Players count (max):
-              </label>
-              <div className="d-flex align-items-center p-0">
+        {(props.mode === "add" || props.mode === "edit") && (
+          <section className={classes["modal-content"]}>
+            <div className="row mb-3">
+              <div className="col-6">
+                <label className="mb-1" htmlFor="hallName">
+                  Hall name:
+                </label>
                 <Input
-                  sx={{
-                    width: "80%",
-                    marginRight: "10px",
-                  }}
-                  type="number"
-                  id="maxPlayersCount"
+                  id="hallName"
+                  placeholder="Enter hall name"
                   required
-                  placeholder="number"
-                  value={maxPlayersCount}
-                  onChange={(event) => setMaxPlayersCount(event.target.value)}
-                  onBlur={(event) =>
-                    setMaxPlayersCount(
-                      Number(event.target.value) < 2 ? 2 : event.target.value
-                    )
-                  }
+                  value={game.hallName}
+                  onChange={onGameHallNameChangeHandler}
                 />
-                <span>players</span>
+              </div>
+              <div className="col-6">
+                <label className="mb-1" htmlFor="gameLevel">
+                  Game level:
+                </label>
+                <Select
+                  id="gameLevel"
+                  placeholder="Choose game level"
+                  required
+                  value={game.level}
+                  onChange={onSelectGameLevelHandler}
+                >
+                  <Option value="High">High</Option>
+                  <Option value="Intermediate">Intermediate</Option>
+                  <Option value="Low">Low</Option>
+                </Select>
               </div>
             </div>
-            <div className="col-6">
-              <label className="mb-1" htmlFor="location">
-                Location:
-              </label>
-              <Input
-                id="location"
-                required
-                placeholder="Enter game location"
-                value={location}
-                onChange={(event) => setLocation(event.target.value)}
+            <div className="row mb-3">
+              <div className="col-6">
+                <label className="mb-1" htmlFor="maxPlayersCount">
+                  Players count (max):
+                </label>
+                <div className="d-flex align-items-center p-0">
+                  <Input
+                    sx={{
+                      width: "80%",
+                      marginRight: "10px",
+                    }}
+                    type="number"
+                    id="maxPlayersCount"
+                    required
+                    placeholder="number"
+                    value={game.maxPlayersCount}
+                    onChange={onGameMaxPlayersCountChangeHandler}
+                    // onBlur={(event) =>
+                    //   setMaxPlayersCount(
+                    //     Number(event.target.value) < 2 ? 2 : event.target.value
+                    //   )
+                    // }
+                  />
+                  <span>players</span>
+                </div>
+              </div>
+              <div className="col-6">
+                <label className="mb-1" htmlFor="location">
+                  Location:
+                </label>
+                <Input
+                  id="location"
+                  required
+                  placeholder="Enter game location"
+                  value={game.location}
+                  onChange={onGameLocationChangeHandler}
+                />
+              </div>
+            </div>
+            <div className="row mb-3">
+              <div className="col-4">
+                <label className="mb-1" htmlFor="price">
+                  Price:
+                </label>
+                <Input
+                  type="number"
+                  id="price"
+                  required
+                  placeholder="Price"
+                  value={game.price}
+                  onChange={onGamePriceChangeHandler}
+                  endDecorator={<div className={classes.currencyIcon}></div>}
+                />
+              </div>
+              <div className="col-4">
+                <label className="mb-1" htmlFor="startDate">
+                  Start Date:
+                </label>
+                <ReactDatePicker
+                  showTimeSelect
+                  autoComplete="off"
+                  id="date"
+                  required
+                  placeholderText="DD/MM/YYYY"
+                  dateFormat="dd/MM/yyyy HH:mm"
+                  selected={
+                    game.startDate ? moment(game.startDate).toDate() : null
+                  }
+                  onChange={onGameStartDateChangeHandler}
+                  customInput={<Input />}
+                />
+              </div>
+              <div className="col-4">
+                <label className="mb-1" htmlFor="endDate">
+                  End Date:
+                </label>
+                <ReactDatePicker
+                  showTimeSelect
+                  autoComplete="off"
+                  id="date"
+                  required
+                  placeholderText="DD/MM/YYYY HH:mm"
+                  dateFormat="dd/MM/yyyy HH:mm"
+                  selected={game.endDate ? moment(game.endDate).toDate() : null}
+                  onChange={onGameEndDateChangeHandler}
+                  customInput={<Input />}
+                />
+              </div>
+            </div>
+            <div className="row mb-3">
+              <div className="d-flex align-items-center mb-3 p-0">
+                <label className="mb-1" htmlFor="notes">
+                  Notes:
+                </label>
+                <ToggleGroupToolbar onHandler={textareaConfigHandler} />
+              </div>
+              <Textarea
+                sx={{
+                  minHeight: "100px",
+                  color,
+                  fontWeight: formats.find((format) => format === "bold")
+                    ? "bold"
+                    : "normal",
+                  fontStyle: formats.find((format) => format === "italic")
+                    ? "italic"
+                    : "normal",
+                  textDecoration: formats.find(
+                    (format) => format === "underlined"
+                  )
+                    ? "underline"
+                    : "none",
+                }}
+                id="notes"
+                value={notes}
+                onChange={(event) => setNotes(event.target.value)}
               />
             </div>
-          </div>
-          <div className="row mb-3">
-            <div className="col-4">
-              <label className="mb-1" htmlFor="price">
-                Price:
-              </label>
-              <Input
-                type="number"
-                id="price"
-                required
-                placeholder="Price"
-                value={price}
-                onChange={(event) => setPrice(event.target.value)}
-                endDecorator={<img src="./UAH.svg" width={20} height={20} />}
-              />
-            </div>
-            <div className="col-4">
-              <label className="mb-1" htmlFor="startDate">
-                Start Date:
-              </label>
-              <ReactDatePicker
-                showTimeSelect
-                autoComplete="off"
-                id="date"
-                required
-                placeholderText="DD/MM/YYYY"
-                dateFormat="dd/MM/yyyy HH:mm"
-                selected={startDate}
-                onChange={(date: any) => setStartDate(date)}
-                customInput={<Input />}
-              />
-            </div>
-            <div className="col-4">
-              <label className="mb-1" htmlFor="endDate">
-                End Date:
-              </label>
-              <ReactDatePicker
-                showTimeSelect
-                autoComplete="off"
-                id="date"
-                required
-                placeholderText="DD/MM/YYYY"
-                dateFormat="dd/MM/yyyy HH:mm"
-                selected={endDate}
-                onChange={(date: any) => setEndDate(date)}
-                customInput={<Input />}
-              />
-            </div>
-          </div>
-          <div className="row mb-3">
-            <div className="d-flex align-items-center mb-3 p-0">
-              <label className="mb-1" htmlFor="notes">
-                Notes:
-              </label>
-              <ToggleGroupToolbar onHandler={textareaConfigHandler} />
-            </div>
-            <Textarea
-              sx={{
-                minHeight: "100px",
-                color,
-                fontWeight: formats.find((format) => format === "bold")
-                  ? "bold"
-                  : "normal",
-                fontStyle: formats.find((format) => format === "italic")
-                  ? "italic"
-                  : "normal",
-                textDecoration: formats.find(
-                  (format) => format === "underlined"
-                )
-                  ? "underline"
-                  : "none",
-              }}
-              id="notes"
-              value={notes}
-              onChange={(event) => setNotes(event.target.value)}
-            />
-          </div>
-        </section>
+          </section>
+        )}
+        {props.mode === "delete" && (
+          <section>
+            <h5 className="text-center">
+              Game: {game.hallName} will be deleted!
+            </h5>
+            <p className="text-center">Are you sure to delete this game?</p>
+          </section>
+        )}
         <section className="modal-buttons d-flex justify-content-end">
-          <Button
-            color="primary"
-            sx={{ marginRight: "20px" }}
-            aria-label=""
-            type="submit"
-            onClick={saveNewGame}
-          >
-            Create
-          </Button>
-          <Button color="neutral" aria-label="" onClick={() => props.onClose()}>
+          {props.mode === "add" && (
+            <Button
+              color="primary"
+              sx={{ marginRight: "20px" }}
+              aria-label=""
+              type="submit"
+              onClick={saveNewGame}
+            >
+              Create
+            </Button>
+          )}
+          {props.mode === "edit" && (
+            <Button
+              color="primary"
+              sx={{ marginRight: "20px" }}
+              aria-label=""
+              type="submit"
+              onClick={editGameDetails}
+            >
+              Edit
+            </Button>
+          )}
+          {props.mode === "delete" && (
+            <Button
+              color="danger"
+              sx={{ marginRight: "20px" }}
+              aria-label=""
+              type="submit"
+              onClick={deleteGameHandler}
+            >
+              Delete
+            </Button>
+          )}
+          <Button color="neutral" aria-label="" onClick={closeModal}>
             Cancel
           </Button>
         </section>
@@ -259,4 +416,4 @@ const GamePopup = (props: {
   );
 };
 
-export default memo(GamePopup);
+export default GamePopup;

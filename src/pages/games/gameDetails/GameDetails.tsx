@@ -1,9 +1,15 @@
 import { Tab, TabList, TabPanel, Tabs } from "@mui/joy";
-import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
-import { useContext, useEffect, useState } from "react";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import {
@@ -12,6 +18,7 @@ import {
   useStore,
 } from "../../../utils/storeManager";
 import GameComments from "../../../components/game/gameComments/GameComments";
+import GamePopup from "../gamePopup/GamePopup";
 import { IGame } from "../../../interfaces/game";
 import { IPlayer } from "../../../interfaces/player";
 import Loader from "../../../components/loader/Loader";
@@ -31,6 +38,9 @@ const GameDetailsPage = () => {
   const [game, setGame] = useState<IGame | undefined>(currentGame);
   const { addPlayerToGame, addCurrentGameToStore } = useStore();
   const userData = useSelector(getUserDataFromStore);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [mode, setMode] = useState("edit");
+  const navigate = useNavigate();
   const [isYouPlayer, setIsYouPlayer] = useState<boolean>(
     Boolean(
       game?.players &&
@@ -57,7 +67,9 @@ const GameDetailsPage = () => {
         addPlayerToGame(player);
         setIsYouPlayer(true);
         addCurrentGameToStore(updatedGame as IGame);
-        toast.success(<Toastr itemName="Success" message="Game was created" />);
+        toast.success(
+          <Toastr itemName="Success" message="You joined the game" />
+        );
       })
       .catch((err) => {
         console.log(err);
@@ -97,9 +109,49 @@ const GameDetailsPage = () => {
     }
   }, [game, userData]);
 
-  const editGame = () => {};
+  const onCloseHandler = useCallback(() => setIsModalOpen(false), []);
 
-  const deleteGame = () => {};
+  const editGameHandler = (newGame: IGame) => {
+    updateDoc(doc(db, "games", newGame.docId!), { ...newGame })
+      .then((data) => {
+        addCurrentGameToStore(newGame);
+        setGame(newGame);
+        toast.success(
+          <Toastr
+            itemName="Success"
+            message="Game details was updated successfully!"
+          />
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(<Toastr itemName="Error" message={err} />);
+      });
+  };
+
+  const deleteGame = (game: IGame) => {
+    deleteDoc(doc(db, "games", game.docId!))
+      .then((data) => {
+        toast.success(
+          <Toastr itemName="Success" message="Game deleted successfully!" />
+        );
+        navigate("/games");
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(<Toastr itemName="Error" message={err} />);
+      });
+  };
+
+  const openEditModal = () => {
+    setMode("edit");
+    setIsModalOpen(true);
+  };
+
+  const openDeleteModal = () => {
+    setMode("delete");
+    setIsModalOpen(true);
+  };
 
   return (
     <>
@@ -204,12 +256,19 @@ const GameDetailsPage = () => {
               </table>
             )}
           </div>
-          {game?.createdBy === userData.fullName && (
-            <div className={classes.actions}>
-              <div className={`${classes.actionIcon} ${classes.edit}`}></div>
-              <div className={`${classes.actionIcon} ${classes.delete}`}></div>
-            </div>
-          )}
+          {game?.createdBy === userData.fullName &&
+            game.status === "incoming" && (
+              <div className={classes.actions}>
+                <div
+                  className={`${classes.actionIcon} ${classes.edit}`}
+                  onClick={openEditModal}
+                ></div>
+                <div
+                  className={`${classes.actionIcon} ${classes.delete}`}
+                  onClick={openDeleteModal}
+                ></div>
+              </div>
+            )}
         </div>
         <hr />
         <Tabs
@@ -239,6 +298,16 @@ const GameDetailsPage = () => {
           </TabPanel>
         </Tabs>
       </section>
+      {
+        <GamePopup
+          open={isModalOpen}
+          onClose={onCloseHandler}
+          onActionGame={editGameHandler}
+          onGameDelete={deleteGame}
+          game={game}
+          mode={mode}
+        />
+      }
       {isLoading && <Loader />}
     </>
   );

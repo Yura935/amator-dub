@@ -1,3 +1,4 @@
+import { INotification } from "./notification";
 import { IUserCharacteristics } from "./userCharacteristics";
 
 export interface IUser {
@@ -13,4 +14,5 @@ export interface IUser {
   phone?: string;
   team?: string;
   location?: string;
+  notifications?: INotification[];
 }

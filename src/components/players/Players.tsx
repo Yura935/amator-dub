@@ -25,7 +25,7 @@ const Players = (props: any) => {
     <div className={classes.players}>
       <div className={classes.buttons}>
         {!isUserJoined && (
-          <Button id={currentGame.docId} onClick={joinGame}>
+          <Button id={currentGame?.docId} onClick={joinGame}>
             Join game
           </Button>
         )}

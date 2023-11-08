@@ -15,7 +15,7 @@ const TableSkeleton = (props: {
     colArr.push({});
   }
   return (
-    <table className="placeholder-glow">
+    <div className="placeholder-glow">
       {rowArr.map((row, index) => (
         <div key={index}>
           {colArr.map((cal, i) => (
@@ -32,7 +32,7 @@ const TableSkeleton = (props: {
           ))}
         </div>
       ))}
-    </table>
+    </div>
   );
 };
 

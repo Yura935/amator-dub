@@ -102,5 +102,10 @@ export const gamesSlice = createSlice({
     addCurrentGame: (state, action: PayloadAction<IGame>) => {
       state.currentGame = action.payload;
     },
+    updateGame: (state, action: PayloadAction<IGame>) => {
+      state.games = state.games.map((game) =>
+        game.docId === action.payload.docId ? action.payload : game
+      );
+    },
   },
 });

@@ -5,4 +5,12 @@
   label {
     padding: 0;
   }
+
+  .currencyIcon {
+    width: 20px;
+    height: 20px;
+    background: url("../../../../public/UAH.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+  }
 }

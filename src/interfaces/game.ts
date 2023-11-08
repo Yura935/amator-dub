@@ -1,5 +1,6 @@
 import { GameLevel } from "../types/gameLevel";
 import { GameStatus } from "../types/gameStatus";
+import { IComment } from "./comment";
 import { INote } from "./note";
 import { IPlayer } from "./player";
 
@@ -9,8 +10,8 @@ export interface IGame {
   playersCount: number | string;
   maxPlayersCount: number | string;
   players: IPlayer[];
-  startDate: string;
-  endDate: string;
+  startDate: string | null;
+  endDate: string | null;
   createdBy: string;
   createdDate: string;
   location: string;
@@ -18,4 +19,5 @@ export interface IGame {
   notes: INote;
   level: GameLevel;
   docId?: string;
+  comments?: IComment[];
 }

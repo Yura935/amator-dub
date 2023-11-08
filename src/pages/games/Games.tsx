@@ -1,18 +1,27 @@
 import { Col, Nav, Tab } from "react-bootstrap";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Button } from "@mui/joy";
+import moment from "moment";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 
 import {
   getActiveGamesFromStore,
+  getAllGamesFromStore,
   getFinishedGamesFromStore,
   getIncomingGamesFromStore,
   useStore,
 } from "../../utils/storeManager";
 import Game from "../../components/game/Game";
 import GamePopup from "./gamePopup/GamePopup";
+import { GameStatus } from "../../types/gameStatus";
 import { IGame } from "../../interfaces/game";
 import Loader from "../../components/loader/Loader";
 import { MainContext } from "../../context/main/mainContext";
@@ -26,20 +35,34 @@ const GamesPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [displayingType, setDisplayingType] = useState("list");
-  const { addNewGameToStore } = useStore();
+  const { addCurrentGameToStore, addNewGameToStore, updateGameById } =
+    useStore();
+  const allGames = useSelector(getAllGamesFromStore);
   const activeGames = useSelector(getActiveGamesFromStore);
   const incomingGames = useSelector(getIncomingGamesFromStore);
   const finishedGames = useSelector(getFinishedGamesFromStore);
   const [games, setGames] = useState<IGame[]>([...activeGames]);
+  const [activeTab, setActiveTab] = useState("active");
+
   const getGames = async () => {
     await getDocs(collection(db, "games")).then((querySnapshot) => {
       const games = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
         docId: doc.id,
       }));
-      const availableGames = [...(games as IGame[])];
-      setGames(availableGames);
-      addNewGameToStore(availableGames);
+      const allGames = [...(games as IGame[])];
+      const gamesForTab = allGames.filter((game) => {
+        if (
+          (activeTab === "incoming" && game.status === "incoming") ||
+          (activeTab === "active" && game.status === "active") ||
+          (activeTab === "finished" && game.status === "finished")
+        ) {
+          return game;
+        }
+        return;
+      });
+      setGames(gamesForTab);
+      addNewGameToStore(allGames);
       setLoadingStatus(false);
     });
   };
@@ -47,16 +70,79 @@ const GamesPage = () => {
   useEffect(() => {
     setLoadingStatus(true);
     getGames();
+    addCurrentGameToStore({
+      createdBy: "",
+      createdDate: "",
+      endDate: "",
+      hallName: "",
+      level: null,
+      location: "",
+      maxPlayersCount: "",
+      notes: {
+        color: "",
+        fontStyle: "",
+        fontWeight: "",
+        text: "",
+        textDecoration: "",
+      },
+      players: [],
+      playersCount: "",
+      price: "",
+      startDate: "",
+      status: "active",
+      comments: [],
+      docId: "",
+    });
   }, []);
+
+  const updateGameStatus = (game: IGame, status: GameStatus) => {
+    console.log(game, status);
+    const docRef = updateDoc(doc(db, "games", game.docId!), {
+      ...game,
+      status,
+    });
+    updateGameById({ ...game, status });
+    setGames((prevState) => {
+      console.log(prevState);
+      // if (prevState.find((g) => g.status === status)) {
+      //   return prevState;
+      // }
+      const updatedState = [{ ...game, status }, ...prevState];
+
+      console.log(status === "active" && activeTab === "active");
+      console.log(prevState);
+      return status === "active" && activeTab === "active"
+        ? updatedState
+        : games; // investigate, should be prevState
+    });
+  };
+
+  useEffect(() => {
+    console.log(allGames);
+    allGames.forEach((game) => {
+      const now = moment.now();
+      const startDate = moment(game.startDate).toDate().getTime();
+      const endDate = moment(game.endDate).toDate().getTime();
+
+      if (startDate <= now && game.status !== "finished") {
+        if (endDate > now) {
+          game.status !== "active" && updateGameStatus(game, "active");
+          // console.log("active");
+        } else {
+          updateGameStatus(game, "finished");
+          console.log("finished");
+        }
+      }
+    });
+  }, [allGames]);
 
   const saveNewGame = async (game: IGame) => {
     try {
       const docRef = await addDoc(collection(db, "games"), game);
       setGames((prevState) => {
-        const updatedState = [game, ...prevState];
-        addNewGameToStore(updatedState);
-
-        return updatedState;
+        const updatedState = [{ ...game, docId: docRef.id }, ...prevState];
+        addNewGameToStore([{ ...game, docId: docRef.id }, ...allGames]);
+        return activeTab === "incoming" ? updatedState : prevState;
       });
       toast.success(<Toastr itemName="Success" message="Game was created" />);
       setIsModalOpen(false);
@@ -68,6 +154,7 @@ const GamesPage = () => {
   };
 
   const onSelectGamesFilter = (eventKey: string | null) => {
+    setActiveTab(eventKey!);
     eventKey === "active" && setGames(activeGames);
     eventKey === "incoming" && setGames(incomingGames);
     eventKey === "finished" && setGames(finishedGames);
@@ -110,7 +197,7 @@ const GamesPage = () => {
       <section className={classes.tabs}>
         <Tab.Container
           id="left-tabs-example"
-          defaultActiveKey="active"
+          defaultActiveKey={activeTab}
           onSelect={onSelectGamesFilter}
         >
           <Col sm={2} style={{ paddingRight: "10px" }}>
@@ -143,7 +230,7 @@ const GamesPage = () => {
                         src="./helper.svg"
                         alt="helper icon"
                       />
-                      <h4>Games Empty</h4>
+                      <h4>There are no {activeTab} games.</h4>
                       <p>Click &quot;Add game&quot; for creating new game!</p>
                     </div>
                   )}
@@ -165,7 +252,8 @@ const GamesPage = () => {
         <GamePopup
           open={isModalOpen}
           onClose={onCloseHandler}
-          onCreateGame={saveNewGame}
+          onActionGame={saveNewGame}
+          mode="add"
         />
       }
       {isLoading && <Loader />}

@@ -10,6 +10,7 @@ import {
   joinGame,
   removeCurrentUser,
   removeUserData,
+  updateGame,
 } from "../store/store";
 import { IGame } from "../interfaces/game";
 import { IPlayer } from "../interfaces/player";
@@ -47,6 +48,10 @@ export const useStore = () => {
     dispatch(addCurrentGame(game));
   };
 
+  const updateGameById = (game: IGame) => {
+    dispatch(updateGame(game));
+  };
+
   return {
     addUserDataToStore,
     addCurrentUserToStore,
@@ -55,6 +60,7 @@ export const useStore = () => {
     addNewGameToStore,
     addPlayerToGame,
     addCurrentGameToStore,
+    updateGameById,
   };
 };
 
