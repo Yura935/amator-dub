@@ -2,6 +2,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import { IRootState } from "./interfaces";
 
+import { IComment } from "../interfaces/comment";
 import { IGame } from "../interfaces/game";
 import { IPlayer } from "../interfaces/player";
 import { IUser } from "../interfaces/user";
@@ -56,6 +57,7 @@ const initialState: IRootState = {
       startDate: "",
       status: "active",
       docId: "",
+      comments: [],
     },
   },
 };
@@ -106,6 +108,9 @@ export const gamesSlice = createSlice({
       state.games = state.games.map((game) =>
         game.docId === action.payload.docId ? action.payload : game
       );
+    },
+    addCommentToGame: (state, action: PayloadAction<IComment>) => {
+      state.currentGame.comments?.push(action.payload);
     },
   },
 });

@@ -1,0 +1,50 @@
+@import "../../../styles/mixins/flexbox";
+
+.comments {
+  .empty {
+    width: 100%;
+    height: 110px;
+    border: 2px dashed darkgray;
+    color: darkgray;
+    font-style: italic;
+
+    @include flexbox(row, center, center, nowrap);
+  }
+
+  .buttons {
+    margin-bottom: 15px;
+
+    @include flexbox(row, flex-end, center, nowrap);
+  }
+
+  .actions {
+    @include flexbox(row, flex-end, center, nowrap);
+  }
+
+  &List {
+    @include flexbox(column, unset, unset, nowrap);
+
+    .comment {
+      position: relative;
+      border: 2px solid gray;
+      border-radius: 10px;
+      padding: 10px;
+
+      @include flexbox(row, unset, unset, nowrap);
+
+      .messageBody {
+        width: 100%;
+
+        .header {
+          margin-bottom: 10px;
+
+          @include flexbox(row, space-between, unset, nowrap);
+
+          .createdDate {
+            color: darkgray;
+          }
+        }
+      }
+    }
+  }
+}

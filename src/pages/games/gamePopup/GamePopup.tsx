@@ -182,6 +182,7 @@ const GamePopup = (props: {
           textDecoration: isUnderlined ? "underline" : "none",
           color,
         },
+        comments: [],
       };
       props.onActionGame(newGame);
       clearFields();

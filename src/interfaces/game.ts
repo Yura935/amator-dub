@@ -19,5 +19,5 @@ export interface IGame {
   notes: INote;
   level: GameLevel;
   docId?: string;
-  comments?: IComment[];
+  comments: IComment[];
 }

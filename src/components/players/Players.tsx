@@ -21,10 +21,19 @@ const Players = (props: any) => {
     navigate(`user/${event.target.id}`);
   };
 
+  const avatarNameFormatter = (name: string): string => {
+    const words = name.split(" ");
+    let newName = "";
+    words.forEach((word) => {
+      newName += word[0];
+    });
+    return newName;
+  };
+
   return (
     <div className={classes.players}>
       <div className={classes.buttons}>
-        {!isUserJoined && (
+        {!isUserJoined && currentGame.status === "incoming" && (
           <Button id={currentGame?.docId} onClick={joinGame}>
             Join game
           </Button>
@@ -40,7 +49,7 @@ const Players = (props: any) => {
         currentGame.players.map((player: IPlayer) => (
           <div key={player.uid} id={player.uid} className={classes.player}>
             <Avatar sx={{ marginRight: "40px" }} src={player.avatar}>
-              {player.fullName.slice(0, 2)}
+              {avatarNameFormatter(player.fullName)}
             </Avatar>
             <h4>{player.fullName}</h4>
           </div>

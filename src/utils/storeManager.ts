@@ -3,6 +3,7 @@ import { createSelector } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
 
 import {
+  addCommentToGame,
   addCurrentGame,
   addCurrentUserUId,
   addNewGame,
@@ -12,6 +13,7 @@ import {
   removeUserData,
   updateGame,
 } from "../store/store";
+import { IComment } from "../interfaces/comment";
 import { IGame } from "../interfaces/game";
 import { IPlayer } from "../interfaces/player";
 import { IRootState } from "../store/interfaces";
@@ -52,6 +54,10 @@ export const useStore = () => {
     dispatch(updateGame(game));
   };
 
+  const addComment = (comment: IComment) => {
+    dispatch(addCommentToGame(comment));
+  };
+
   return {
     addUserDataToStore,
     addCurrentUserToStore,
@@ -61,6 +67,7 @@ export const useStore = () => {
     addPlayerToGame,
     addCurrentGameToStore,
     updateGameById,
+    addComment,
   };
 };
 

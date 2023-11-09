@@ -1,7 +1,7 @@
-import { IUser } from "./user";
+import { ICommentAuthor } from "./commentAuthor";
 
 export interface IComment {
   message: string;
-  author: IUser | string;
-  date: Date | string | null;
+  author: ICommentAuthor;
+  creationDate: Date | string | null;
 }

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Tab, TabList, TabPanel, Tabs } from "@mui/joy";
 import {
   collection,
@@ -284,6 +285,11 @@ const GameDetailsPage = () => {
             <Tab indicatorPlacement="top" value="comments">
               Comments
             </Tab>
+            {game?.status === "finished" && (
+              <Tab indicatorPlacement="top" value="feedback">
+                Feedback
+              </Tab>
+            )}
           </TabList>
           <TabPanel value="players">
             {!isLoading && (
@@ -294,8 +300,11 @@ const GameDetailsPage = () => {
             )}
           </TabPanel>
           <TabPanel value="comments">
-            <GameComments />
+            <GameComments isYouPlayer={isYouPlayer} />
           </TabPanel>
+          {game?.status === "finished" && (
+            <TabPanel value="feedback"></TabPanel>
+          )}
         </Tabs>
       </section>
       {
