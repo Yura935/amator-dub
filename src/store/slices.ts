@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import { IRootState } from "./interfaces";
@@ -60,6 +61,9 @@ const initialState: IRootState = {
       comments: [],
     },
   },
+  users: {
+    users: [],
+  },
 };
 
 export const userSlice = createSlice({
@@ -77,6 +81,16 @@ export const userSlice = createSlice({
     },
     removeUserData: (state) => {
       state.userData = initialState.user.userData;
+    },
+  },
+});
+
+export const usersSlice = createSlice({
+  name: "users",
+  initialState: initialState.users,
+  reducers: {
+    addUsers: (state, action: PayloadAction<IUser[]>) => {
+      state.users = action.payload;
     },
   },
 });

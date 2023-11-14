@@ -15,9 +15,12 @@ const TableSkeleton = (props: {
     colArr.push({});
   }
   return (
-    <div className="placeholder-glow">
+    <div
+      className="placeholder-glow"
+      style={{ backgroundColor: "#fff", padding: "10px" }}
+    >
       {rowArr.map((row, index) => (
-        <div key={index}>
+        <div key={index} className="d-flex justify-content-between">
           {colArr.map((cal, i) => (
             <div
               className="placeholder"

@@ -196,7 +196,7 @@ const EditUserProfilePage = () => {
             onChange={onChangeHandler}
           />
         </div>
-        <div className="d-flex align-items-center mb-2">
+        {/* <div className="d-flex align-items-center mb-2">
           <div className="label col-4">
             <h6>Played Games Count:</h6>
           </div>
@@ -209,7 +209,7 @@ const EditUserProfilePage = () => {
             value={userProfileData?.characteristics?.playedGamesCount}
             onChange={onChangeHandler}
           />
-        </div>
+        </div> */}
       </div>
       <Button sx={{ float: "right" }} color="success" type="submit">
         Save

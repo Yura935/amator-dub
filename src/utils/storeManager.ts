@@ -8,6 +8,7 @@ import {
   addCurrentUserUId,
   addNewGame,
   addUserData,
+  addUsers,
   joinGame,
   removeCurrentUser,
   removeUserData,
@@ -58,6 +59,10 @@ export const useStore = () => {
     dispatch(addCommentToGame(comment));
   };
 
+  const addAllUsersToStore = (users: IUser[]) => {
+    dispatch(addUsers(users));
+  };
+
   return {
     addUserDataToStore,
     addCurrentUserToStore,
@@ -68,6 +73,7 @@ export const useStore = () => {
     addCurrentGameToStore,
     updateGameById,
     addComment,
+    addAllUsersToStore,
   };
 };
 
@@ -104,4 +110,9 @@ export const getAllGamesFromStore = createSelector(
 export const getCurrentGame = createSelector(
   (state: IRootState) => state.games,
   (games) => games.currentGame
+);
+
+export const getAllUsers = createSelector(
+  (state: IRootState) => state.users,
+  (users) => users.users
 );

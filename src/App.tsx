@@ -16,6 +16,7 @@ import classes from "./App.module.scss";
 
 const App = () => {
   const {
+    addAllUsersToStore,
     addCurrentUserToStore,
     addUserDataToStore,
     removeCurrentUserFromStore,
@@ -31,6 +32,9 @@ const App = () => {
           ...doc.data(),
           docId: doc.id,
         }));
+        console.log(users);
+        addAllUsersToStore(users as IUser[]);
+
         const curUser = (users as IUser[]).find((u) => u?.uid === user?.uid);
         curUser ? addUserDataToStore(curUser) : removeUserDataFromStore();
       });

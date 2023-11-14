@@ -10,4 +10,7 @@ export interface IRootState {
     games: IGame[];
     currentGame: IGame;
   };
+  users: {
+    users: IUser[];
+  };
 }
