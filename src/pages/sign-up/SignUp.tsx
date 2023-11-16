@@ -19,7 +19,7 @@ const SignUpPage = () => {
   const navigate = useNavigate();
   const [fullName, setFullName] = useState("");
   const [city, setCity] = useState("");
-  const [age, setAge] = useState("");
+  const [age, setAge] = useState<number>();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -74,14 +74,14 @@ const SignUpPage = () => {
             team: "",
             location: "",
             characteristics: {
-              userHeight: "",
-              userWeight: "",
-              maxJumpHeight: "",
-              maxFeedForce: "",
-              playedGamesCount: "",
-              serving: "",
-              aces: "",
-              blocks: "",
+              userHeight: null,
+              userWeight: null,
+              maxJumpHeight: null,
+              maxFeedForce: null,
+              playedGamesCount: 0,
+              serving: null,
+              aces: null,
+              blocks: null,
             },
           });
           console.log("Document written with ID: ", docRef);
@@ -104,13 +104,13 @@ const SignUpPage = () => {
       });
   };
 
-  const resetValues = () => {
-    setFullName("");
-    setCity("");
-    setAge("");
-    setEmail("");
-    setPassword("");
-  };
+  // const resetValues = () => {
+  //   setFullName("");
+  //   setCity("");
+  //   setAge(null);
+  //   setEmail("");
+  //   setPassword("");
+  // };
 
   return (
     <>
@@ -150,7 +150,7 @@ const SignUpPage = () => {
                 min={14}
                 value={age}
                 placeholder="Age"
-                onChange={(e) => setAge(e.target.value)}
+                onChange={(e) => setAge(Number(e.target.value))}
                 required
               />
             </div>

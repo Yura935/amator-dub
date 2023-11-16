@@ -23,6 +23,7 @@ const initialState: IRootState = {
       team: "",
       location: "",
       docId: "",
+      //investigate, default values should be null
       characteristics: {
         userHeight: 0,
         userWeight: 0,
@@ -90,7 +91,12 @@ export const usersSlice = createSlice({
   initialState: initialState.users,
   reducers: {
     addUsers: (state, action: PayloadAction<IUser[]>) => {
-      state.users = action.payload;
+      state.users = action.payload.length ? action.payload : state.users;
+    },
+    updateUser: (state, action: PayloadAction<IUser>) => {
+      state.users = state.users.map((user) =>
+        user.docId === action.payload.docId ? action.payload : user
+      );
     },
   },
 });

@@ -27,14 +27,15 @@ const EditUserProfilePage = () => {
       };
       for (const [key, value] of Object.entries(updatedValues)) {
         if (key === event.target.id) {
-          updatedValues[key] = event.target.value;
+          updatedValues[key] =
+            key === "age" ? Number(event.target.value) : event.target.value;
         } else {
           updatedValues[key] = value;
         }
       }
       for (const [key, value] of Object.entries(updatedCharacteristicsValues)) {
         if (key === event.target.id) {
-          updatedCharacteristicsValues[key] = event.target.value.toString();
+          updatedCharacteristicsValues[key] = Number(event.target.value);
         } else {
           updatedCharacteristicsValues[key] = value;
         }

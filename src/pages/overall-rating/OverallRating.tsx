@@ -112,7 +112,7 @@ const OverallRatingPage = () => {
       {!isDataLoaded && (
         <TableSkeleton
           colCount={columns.length}
-          rowCount={7}
+          rowCount={15}
           itemHeight="40px"
           itemWidth="177px"
         />

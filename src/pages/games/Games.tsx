@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import {
   getActiveGamesFromStore,
   getAllGamesFromStore,
+  getAllUsers,
   getFinishedGamesFromStore,
   getIncomingGamesFromStore,
   useStore,
@@ -34,13 +35,18 @@ const GamesPage = () => {
   const { isLoading, setLoadingStatus } = useContext(MainContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [displayingType, setDisplayingType] = useState("list");
-  const { addCurrentGameToStore, addNewGameToStore, updateGameById } =
-    useStore();
+  // const [displayingType, setDisplayingType] = useState("list");
+  const {
+    addCurrentGameToStore,
+    addNewGameToStore,
+    updateGameById,
+    updateUserById,
+  } = useStore();
   const allGames = useSelector(getAllGamesFromStore);
   const activeGames = useSelector(getActiveGamesFromStore);
   const incomingGames = useSelector(getIncomingGamesFromStore);
   const finishedGames = useSelector(getFinishedGamesFromStore);
+  const users = useSelector(getAllUsers);
   const [games, setGames] = useState<IGame[]>([...activeGames]);
   const [activeTab, setActiveTab] = useState("active");
 
@@ -96,45 +102,64 @@ const GamesPage = () => {
   }, []);
 
   const updateGameStatus = (game: IGame, status: GameStatus) => {
-    console.log(game, status);
     const docRef = updateDoc(doc(db, "games", game.docId!), {
       ...game,
       status,
     });
     updateGameById({ ...game, status });
     setGames((prevState) => {
-      console.log(prevState);
-      // if (prevState.find((g) => g.status === status)) {
-      //   return prevState;
-      // }
       const updatedState = [{ ...game, status }, ...prevState];
 
-      console.log(status === "active" && activeTab === "active");
-      console.log(prevState);
       return status === "active" && activeTab === "active"
         ? updatedState
         : games; // investigate, should be prevState
     });
   };
 
-  useEffect(() => {
-    console.log(allGames);
-    allGames.forEach((game) => {
-      const now = moment.now();
-      const startDate = moment(game.startDate).toDate().getTime();
-      const endDate = moment(game.endDate).toDate().getTime();
-
-      if (startDate <= now && game.status !== "finished") {
-        if (endDate > now) {
-          game.status !== "active" && updateGameStatus(game, "active");
-          // console.log("active");
-        } else {
-          updateGameStatus(game, "finished");
-          console.log("finished");
-        }
-      }
+  const increasePlayedGamesCount = (game: IGame) => {
+    const newGame = { ...game };
+    newGame.players.forEach((player) => {
+      const playedUser = users.filter((user) => user.uid === player.uid)[0];
+      const newPlayedUser = {
+        ...playedUser,
+        characteristics: {
+          ...playedUser.characteristics,
+          playedGamesCount: playedUser.characteristics.playedGamesCount + 1,
+        },
+      };
+      updateDoc(doc(db, "users", newPlayedUser?.docId), {
+        ...newPlayedUser,
+      })
+        .then(() => {
+          updateUserById(newPlayedUser);
+          console.log("User data updated success");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     });
-  }, [allGames]);
+  };
+
+  useEffect(() => {
+    if (users.length) {
+      allGames.forEach((game) => {
+        const now = moment.now();
+        const startDate = moment(game.startDate).toDate().getTime();
+        const endDate = moment(game.endDate).toDate().getTime();
+
+        if (startDate <= now && game.status !== "finished") {
+          if (endDate > now) {
+            game.status !== "active" && updateGameStatus(game, "active");
+            // console.log("active");
+          } else {
+            updateGameStatus(game, "finished");
+            increasePlayedGamesCount(game);
+            console.log("finished");
+          }
+        }
+      });
+    }
+  }, [allGames, users]);
 
   const saveNewGame = async (game: IGame) => {
     try {

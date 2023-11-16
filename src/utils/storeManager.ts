@@ -13,6 +13,7 @@ import {
   removeCurrentUser,
   removeUserData,
   updateGame,
+  updateUser,
 } from "../store/store";
 import { IComment } from "../interfaces/comment";
 import { IGame } from "../interfaces/game";
@@ -63,6 +64,10 @@ export const useStore = () => {
     dispatch(addUsers(users));
   };
 
+  const updateUserById = (user: IUser) => {
+    dispatch(updateUser(user));
+  };
+
   return {
     addUserDataToStore,
     addCurrentUserToStore,
@@ -74,6 +79,7 @@ export const useStore = () => {
     updateGameById,
     addComment,
     addAllUsersToStore,
+    updateUserById,
   };
 };
 
