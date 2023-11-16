@@ -3,18 +3,27 @@ import { memo } from "react";
 import { useSelector } from "react-redux";
 
 import { IPlayer } from "../../interfaces/player";
-import { getCurrentGame } from "../../utils/storeManager";
+import { getCurrentGame, getUserDataFromStore } from "../../utils/storeManager";
 import { useNavigate } from "react-router-dom";
 
 import classes from "./Players.module.scss";
 
 const Players = (props: any) => {
-  const { isUserJoined, onJoinGame } = props;
+  const { isUserJoined, onJoinGame, onSendFeedback } = props;
   const currentGame = useSelector(getCurrentGame);
+  const userData = useSelector(getUserDataFromStore);
   const navigate = useNavigate();
 
   const joinGame = (event: any) => {
     onJoinGame(event.target.id);
+  };
+
+  const sendFeedback = (event: any) => {
+    const currentPlayer = currentGame.players.filter(
+      (pl) => pl.uid === event.target.id.slice(1)
+    )[0];
+    console.log(currentPlayer);
+    onSendFeedback(currentPlayer);
   };
 
   const viewPlayerProfile = (event: any) => {
@@ -52,10 +61,20 @@ const Players = (props: any) => {
               {avatarNameFormatter(player.fullName)}
             </Avatar>
             <h4>{player.fullName}</h4>
+            {player.uid !== userData.uid && isUserJoined && (
+              <Button
+                id={"b" + player.uid}
+                variant="outlined"
+                sx={{ position: "absolute", right: "10px" }}
+                onClick={sendFeedback}
+              >
+                ★
+              </Button>
+            )}
           </div>
         ))}
     </div>
   );
 };
 
-export default memo(Players);
+export default Players;

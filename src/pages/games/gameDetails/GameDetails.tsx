@@ -30,6 +30,7 @@ import Toastr from "../../../components/toastr/Toastr";
 import { db } from "../../../firebase";
 
 import classes from "./GameDetails.module.scss";
+import { IFeedback } from "../../../interfaces/feedback";
 
 // eslint-disable-next-line complexity
 const GameDetailsPage = () => {
@@ -153,6 +154,13 @@ const GameDetailsPage = () => {
     setMode("delete");
     setIsModalOpen(true);
   };
+
+  const handleSendFeedback = (player: IPlayer) => {
+    setMode("feedback");
+    setIsModalOpen(true);
+  };
+
+  const sendFeedback = (feedback: IFeedback) => {};
 
   return (
     <>
@@ -285,17 +293,18 @@ const GameDetailsPage = () => {
             <Tab indicatorPlacement="top" value="comments">
               Comments
             </Tab>
-            {game?.status === "finished" && (
+            {/* {game?.status === "finished" && (
               <Tab indicatorPlacement="top" value="feedback">
                 Feedback
               </Tab>
-            )}
+            )} */}
           </TabList>
           <TabPanel value="players">
             {!isLoading && (
               <Players
                 isUserJoined={isYouPlayer}
                 onJoinGame={joinGameHandler}
+                onSendFeedback={handleSendFeedback}
               />
             )}
           </TabPanel>
@@ -313,6 +322,7 @@ const GameDetailsPage = () => {
           onClose={onCloseHandler}
           onActionGame={editGameHandler}
           onGameDelete={deleteGame}
+          onSendFeedback={sendFeedback}
           game={game}
           mode={mode}
         />

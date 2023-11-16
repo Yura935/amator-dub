@@ -18,6 +18,8 @@
   }
 
   .actions {
+    margin-bottom: 10px;
+
     @include flexbox(row, flex-end, center, nowrap);
   }
 
@@ -29,6 +31,7 @@
       border: 2px solid gray;
       border-radius: 10px;
       padding: 10px;
+      margin-bottom: 10px;
 
       @include flexbox(row, unset, unset, nowrap);
 

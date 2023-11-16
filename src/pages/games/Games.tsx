@@ -165,7 +165,7 @@ const GamesPage = () => {
   return (
     <>
       <div className={classes.actions}>
-        <div className={classes.switch}>
+        {/* <div className={classes.switch}>
           <div
             className={`${classes.switchCase} ${
               displayingType === "list" ? classes.active : ""
@@ -191,7 +191,7 @@ const GamesPage = () => {
             />
             <p className={classes["switchCase__label"]}>Calendar</p>
           </div>
-        </div>
+        </div> */}
         <Button onClick={() => setIsModalOpen(true)}>Add game</Button>
       </div>
       <section className={classes.tabs}>

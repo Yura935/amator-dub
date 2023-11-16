@@ -10,7 +10,7 @@ import {
   Textarea,
   Typography,
 } from "@mui/joy";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ReactDatePicker from "react-datepicker";
 import moment from "moment";
 import { useSelector } from "react-redux";
@@ -21,6 +21,7 @@ import ToggleGroupToolbar from "../../../components/toggleGroupToolbar/ToggleGro
 import { getUserDataFromStore } from "../../../utils/storeManager";
 
 import classes from "./GamePopup.module.scss";
+import { IFeedback } from "../../../interfaces/feedback";
 
 const GamePopup = (props: {
   open: boolean;
@@ -29,6 +30,7 @@ const GamePopup = (props: {
   mode: string;
   game?: IGame;
   onGameDelete?: (game: IGame) => void;
+  onSendFeedback?: (feedback: IFeedback) => void;
 }) => {
   const userData = useSelector(getUserDataFromStore);
   const initialGameState: IGame = {
@@ -58,6 +60,9 @@ const GamePopup = (props: {
   const [notes, setNotes] = useState("");
   const [formats, setFormats] = useState<string[]>([]);
   const [color, setColor] = useState("");
+  const feedbackOptions = useMemo(() => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], []);
+  const [feedbackEstimate, setFeedbackEstimate] = useState<string | null>(null);
+  const feedbackMessageRef = useRef<HTMLTextAreaElement>(null);
 
   const onGameHallNameChangeHandler = (event: any) => {
     setGame((prevState) => {
@@ -202,6 +207,22 @@ const GamePopup = (props: {
   const deleteGameHandler = () => {
     props.onGameDelete!(game);
     closeModal();
+  };
+
+  const onChangeEstimateHandler = (event: any) => {
+    setFeedbackEstimate(event.target.value);
+  };
+
+  const submitSendingFeedback = () => {
+    console.log(feedbackMessageRef.current);
+    const feedback = {
+      docId: "",
+      estimate: feedbackEstimate,
+      message: feedbackMessageRef.current!.value,
+      gameId: props.game!.docId,
+    };
+    // props.onSendFeedback!(feedback);
+    console.log(feedback);
   };
 
   return (
@@ -374,6 +395,57 @@ const GamePopup = (props: {
             <p className="text-center">Are you sure to delete this game?</p>
           </section>
         )}
+        {props.mode === "feedback" && (
+          <section className={classes.feedback}>
+            <h4 className={classes.title}>
+              How can you evaluate a player&apos;s performance?
+            </h4>
+            <div className={classes.options}>
+              {feedbackOptions.map((option) => (
+                <div key={option} className={classes.option}>
+                  <label
+                    htmlFor={`option_${option}`}
+                    className={`${classes.controls} ${classes["control-selection"]}`}
+                  >
+                    <input
+                      className={classes["radio-check"]}
+                      type="radio"
+                      role="radio"
+                      name="option"
+                      id={`option_${option}`}
+                      value={option}
+                      onChange={onChangeEstimateHandler}
+                    />
+                    <span className={classes["control-label"]}>{option}</span>
+                    <span className={classes.blinker}></span>
+                  </label>
+                </div>
+              ))}
+            </div>
+            <div className={classes.additionalInfo}>
+              <div className={classes.label}>
+                <span>Looser</span>
+              </div>
+              <div className={classes.label}>
+                <span>Best player</span>
+              </div>
+            </div>
+            <h5 className={classes.additionalTitle}>Additional feedback</h5>
+            <textarea
+              className={classes.message}
+              name="feedbackMessage"
+              id="feedbackMessage"
+              placeholder="Please provide your feedback here..."
+              ref={feedbackMessageRef}
+            ></textarea>
+            {/* <Textarea
+              name="feedbackMessage"
+              sx={{ minHeight: "100px", marginBottom: "10px" }}
+              placeholder="Please provide your feedback here..."
+              ref={feedbackMessageRef}
+            /> */}
+          </section>
+        )}
         <section className="modal-buttons d-flex justify-content-end">
           {props.mode === "add" && (
             <Button
@@ -406,6 +478,17 @@ const GamePopup = (props: {
               onClick={deleteGameHandler}
             >
               Delete
+            </Button>
+          )}
+          {props.mode === "feedback" && (
+            <Button
+              color="primary"
+              sx={{ marginRight: "20px" }}
+              aria-label=""
+              type="submit"
+              onClick={submitSendingFeedback}
+            >
+              Submit
             </Button>
           )}
           <Button color="neutral" aria-label="" onClick={closeModal}>

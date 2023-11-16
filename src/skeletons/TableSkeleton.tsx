@@ -20,7 +20,7 @@ const TableSkeleton = (props: {
       style={{ backgroundColor: "#fff", padding: "10px" }}
     >
       {rowArr.map((row, index) => (
-        <div key={index} className="d-flex justify-content-between">
+        <div key={index}>
           {colArr.map((cal, i) => (
             <div
               className="placeholder"

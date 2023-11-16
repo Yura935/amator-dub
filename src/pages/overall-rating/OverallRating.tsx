@@ -114,7 +114,7 @@ const OverallRatingPage = () => {
           colCount={columns.length}
           rowCount={7}
           itemHeight="40px"
-          itemWidth="175px"
+          itemWidth="177px"
         />
       )}
     </section>

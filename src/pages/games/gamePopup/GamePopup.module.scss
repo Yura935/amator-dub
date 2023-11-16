@@ -1,3 +1,5 @@
+@import "../../../styles/mixins/flexbox";
+
 .modal-content {
   min-width: 660px;
   padding: 0 40px;
@@ -12,5 +14,126 @@
     background: url("../../../../public/UAH.svg");
     background-position: center;
     background-repeat: no-repeat;
+  }
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.options {
+  width: 100%;
+  display: table;
+  border-spacing: 1px;
+  table-layout: fixed;
+  margin: 0;
+  position: relative;
+  vertical-align: top;
+
+  .option {
+    cursor: pointer;
+    display: contents;
+    text-align: center;
+    padding: 0;
+
+    .control-selection {
+      width: auto;
+      min-width: auto;
+      padding: 20px 0;
+      cursor: pointer;
+      display: table-cell;
+      text-align: center;
+      position: relative;
+      margin: 0 auto;
+      z-index: 1;
+
+      .radio-check {
+        position: absolute;
+        z-index: -1;
+        -moz-opacity: 0;
+        -khtml-opacity: 0;
+        -webkit-opacity: 0;
+        opacity: 0;
+        line-height: normal;
+        margin: 4px 0 0;
+        padding: 0;
+      }
+
+      .control-label {
+        color: #0d6bb8;
+        font-size: 20px;
+        font-weight: 500;
+        z-index: 1;
+        width: 100%;
+        border: none;
+        line-height: 22px;
+        position: relative;
+        border-bottom: 1px solid transparent;
+        border-top: 1px solid transparent;
+        display: initial;
+        vertical-align: top;
+      }
+
+      .blinker {
+        border: 1px solid #0d6bb8;
+        border-radius: 3px;
+        margin: 5px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: -1;
+
+        &:hover {
+          background: #0a86ea1a;
+        }
+      }
+    }
+
+    .controls {
+      .radio-check:checked ~ .blinker {
+        background: #0d6bb8;
+      }
+
+      .radio-check:checked ~ .control-label {
+        color: #fff;
+      }
+    }
+  }
+}
+
+.additionalInfo {
+  margin: -5px 5px 30px;
+  font-size: 14px;
+  font-weight: 400;
+  z-index: 1;
+  border: none;
+  line-height: 22px;
+  position: relative;
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  display: initial;
+  vertical-align: top;
+
+  @include flexbox(row, space-between, unset, nowrap);
+}
+
+.additionalTitle {
+  text-align: center;
+}
+
+.message {
+  width: 100%;
+  min-height: 100px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  outline: none;
+  resize: none;
+
+  &:focus {
+    border-color: #0d6bb8;
   }
 }

@@ -34,7 +34,7 @@
   margin-top: 50px;
   background-color: #fff;
 
-  @include flexbox(row, space-between, center, nowrap);
+  @include flexbox(row, flex-end, center, nowrap);
 
   .switch {
     @include flexbox(row, unset, center, nowrap);

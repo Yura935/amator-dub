@@ -47,6 +47,7 @@ const GameComments = (props: any) => {
     })
       .then((data) => {
         addComment(comment);
+        setCommentMessage("");
         setComments((prevState) => [...prevState, comment]);
         setIsNewComment(false);
         toast.success(
@@ -97,7 +98,7 @@ const GameComments = (props: any) => {
           </div>
         </>
       )}
-      {!isNewComment && comments?.length > 0 && (
+      {comments?.length > 0 && (
         <div className={classes.commentsList}>
           {comments.map((comm, index) => (
             <div key={index} className={classes.comment}>
