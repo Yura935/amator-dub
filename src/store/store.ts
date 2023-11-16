@@ -6,7 +6,7 @@ const { addCurrentUserUId, addUserData, removeCurrentUser, removeUserData } =
   userSlice.actions;
 const { addNewGame, joinGame, addCurrentGame, updateGame, addCommentToGame } =
   gamesSlice.actions;
-const { addUsers, updateUser } = usersSlice.actions;
+const { addUsers, updateUser, addFeedback, initFeedbacks, updateFeedback } = usersSlice.actions;
 const store = configureStore({
   reducer: {
     user: userSlice.reducer,
@@ -32,5 +32,8 @@ export {
   addCommentToGame,
   addUsers,
   updateUser,
+  addFeedback,
+  initFeedbacks,
+  updateFeedback,
 };
 export default store;

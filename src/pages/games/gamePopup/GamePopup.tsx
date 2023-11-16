@@ -16,12 +16,13 @@ import moment from "moment";
 import { useSelector } from "react-redux";
 
 import { GameLevel } from "../../../types/gameLevel";
+import { IFeedback } from "../../../interfaces/feedback";
 import { IGame } from "../../../interfaces/game";
+import { IPlayer } from "../../../interfaces/player";
 import ToggleGroupToolbar from "../../../components/toggleGroupToolbar/ToggleGroupToolbar";
 import { getUserDataFromStore } from "../../../utils/storeManager";
 
 import classes from "./GamePopup.module.scss";
-import { IFeedback } from "../../../interfaces/feedback";
 
 const GamePopup = (props: {
   open: boolean;
@@ -31,6 +32,7 @@ const GamePopup = (props: {
   game?: IGame;
   onGameDelete?: (game: IGame) => void;
   onSendFeedback?: (feedback: IFeedback) => void;
+  receiverPlayer?: IPlayer;
 }) => {
   const userData = useSelector(getUserDataFromStore);
   const initialGameState: IGame = {
@@ -214,15 +216,21 @@ const GamePopup = (props: {
   };
 
   const submitSendingFeedback = () => {
-    console.log(feedbackMessageRef.current);
-    const feedback = {
+    const feedback: IFeedback = {
       docId: "",
       estimate: feedbackEstimate,
       message: feedbackMessageRef.current!.value,
-      gameId: props.game!.docId,
+      gameId: props.game!.docId!,
+      author: {
+        avatar: userData.avatar,
+        fullName: userData.fullName,
+        gameId: props.game!.docId!,
+        uid: userData.uid,
+      },
+      receiver: props.receiverPlayer!,
     };
-    // props.onSendFeedback!(feedback);
-    console.log(feedback);
+    props.onSendFeedback!(feedback);
+    closeModal();
   };
 
   return (

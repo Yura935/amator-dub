@@ -1,4 +1,4 @@
-@import "../../styles/mixins/flexbox";
+@import "../../../styles/mixins/flexbox";
 
 .players {
   .buttons {
@@ -36,5 +36,12 @@
   .player:hover {
     background-color: #3a2f2f14;
     cursor: pointer;
+  }
+
+  .feedbackStatus {
+    position: absolute;
+    font-style: italic;
+    color: gray;
+    right: 15px;
   }
 }

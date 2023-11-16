@@ -1,18 +1,28 @@
+import { collection, getDocs } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import { getAllUsers, getUserDataFromStore } from "../../utils/storeManager";
+import {
+  getAllUsers,
+  getFeedbacks,
+  getUserDataFromStore,
+  useStore,
+} from "../../utils/storeManager";
+import { IFeedback } from "../../interfaces/feedback";
+import TableSkeleton from "../../skeletons/TableSkeleton";
+import { db } from "../../firebase";
 
 import classes from "./OverallRating.module.scss";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import TableSkeleton from "../../skeletons/TableSkeleton";
 
 const OverallRatingPage = () => {
   const userData = useSelector(getUserDataFromStore);
   const navigate = useNavigate();
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [data, setData] = useState<any[]>([]);
+  const feedbacks = useSelector(getFeedbacks);
+  const { initializeFeedbacks } = useStore();
 
   const users = useSelector(getAllUsers);
 
@@ -86,6 +96,18 @@ const OverallRatingPage = () => {
   const viewPlayerProfile = (event: any) => {
     navigate(`user/${event.target.id}`);
   };
+
+  useEffect(() => {
+    if (!feedbacks.length) {
+      getDocs(collection(db, "feedbacks")).then((querySnapshot) => {
+        const receivedFeedbacks = querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          docId: doc.id,
+        }));
+        initializeFeedbacks(receivedFeedbacks as IFeedback[]);
+      });
+    }
+  }, []);
 
   // A super simple expandable component.
   //   const ExpandedComponent = (props: { data: any }) => (

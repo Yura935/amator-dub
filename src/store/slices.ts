@@ -7,6 +7,7 @@ import { IComment } from "../interfaces/comment";
 import { IGame } from "../interfaces/game";
 import { IPlayer } from "../interfaces/player";
 import { IUser } from "../interfaces/user";
+import { IFeedback } from "../interfaces/feedback";
 
 const initialState: IRootState = {
   user: {
@@ -64,6 +65,7 @@ const initialState: IRootState = {
   },
   users: {
     users: [],
+    feedbacks: [],
   },
 };
 
@@ -96,6 +98,17 @@ export const usersSlice = createSlice({
     updateUser: (state, action: PayloadAction<IUser>) => {
       state.users = state.users.map((user) =>
         user.docId === action.payload.docId ? action.payload : user
+      );
+    },
+    initFeedbacks: (state, action: PayloadAction<IFeedback[]>) => {
+      state.feedbacks = action.payload;
+    },
+    addFeedback: (state, action: PayloadAction<IFeedback>) => {
+      state.feedbacks = [...state.feedbacks, action.payload];
+    },
+    updateFeedback: (state, action: PayloadAction<IFeedback>) => {
+      state.feedbacks = state.feedbacks.map((feedback) =>
+        feedback.docId === action.payload.docId ? action.payload : feedback
       );
     },
   },

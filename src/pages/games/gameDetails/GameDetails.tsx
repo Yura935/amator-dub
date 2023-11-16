@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import { Tab, TabList, TabPanel, Tabs } from "@mui/joy";
 import {
+  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -20,17 +21,17 @@ import {
 } from "../../../utils/storeManager";
 import GameComments from "../../../components/game/gameComments/GameComments";
 import GamePopup from "../gamePopup/GamePopup";
+import { IFeedback } from "../../../interfaces/feedback";
 import { IGame } from "../../../interfaces/game";
 import { IPlayer } from "../../../interfaces/player";
 import Loader from "../../../components/loader/Loader";
 import { MainContext } from "../../../context/main/mainContext";
-import Players from "../../../components/players/Players";
+import Players from "../../../components/game/players/Players";
 import TableSkeleton from "../../../skeletons/TableSkeleton";
 import Toastr from "../../../components/toastr/Toastr";
 import { db } from "../../../firebase";
 
 import classes from "./GameDetails.module.scss";
-import { IFeedback } from "../../../interfaces/feedback";
 
 // eslint-disable-next-line complexity
 const GameDetailsPage = () => {
@@ -38,7 +39,7 @@ const GameDetailsPage = () => {
   const currentGame = useSelector(getCurrentGame);
   const params = useParams();
   const [game, setGame] = useState<IGame | undefined>(currentGame);
-  const { addPlayerToGame, addCurrentGameToStore } = useStore();
+  const { addPlayerToGame, addCurrentGameToStore, updateFeedbackById } = useStore();
   const userData = useSelector(getUserDataFromStore);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState("edit");
@@ -50,6 +51,7 @@ const GameDetailsPage = () => {
         game?.players.find((player) => player.uid === userData.uid)
     )
   );
+  const [receiver, setReceiver] = useState<IPlayer | null>(null);
 
   const joinGameHandler = async (id: string) => {
     const player: IPlayer = {
@@ -156,11 +158,30 @@ const GameDetailsPage = () => {
   };
 
   const handleSendFeedback = (player: IPlayer) => {
+    setReceiver(player);
     setMode("feedback");
     setIsModalOpen(true);
   };
 
-  const sendFeedback = (feedback: IFeedback) => {};
+  const sendFeedback = (feedback: IFeedback) => {
+    addDoc(collection(db, "feedbacks"), { ...feedback })
+      .then((res) => {
+        console.log(res);
+        updateFeedbackById({...feedback, docId: res.id});
+        toast.success(
+          <Toastr
+            itemName="Success"
+            message={`Feedback to ${feedback.receiver.fullName} was send.`}
+          />
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(
+          <Toastr itemName="Sign Up error" message="Email already in use." />
+        );
+      });
+  };
 
   return (
     <>
@@ -325,6 +346,7 @@ const GameDetailsPage = () => {
           onSendFeedback={sendFeedback}
           game={game}
           mode={mode}
+          receiverPlayer={receiver!}
         />
       }
       {isLoading && <Loader />}

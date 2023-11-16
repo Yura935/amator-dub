@@ -1,22 +1,45 @@
 import { Avatar, Button } from "@mui/joy";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { useSelector } from "react-redux";
 
-import { IPlayer } from "../../interfaces/player";
-import { getCurrentGame, getUserDataFromStore } from "../../utils/storeManager";
+import { IPlayer } from "../../../interfaces/player";
+import {
+  getCurrentGame,
+  getFeedbacks,
+  getUserDataFromStore,
+  useStore,
+} from "../../../utils/storeManager";
 import { useNavigate } from "react-router-dom";
 
 import classes from "./Players.module.scss";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../../firebase";
+import { IFeedback } from "../../../interfaces/feedback";
 
 const Players = (props: any) => {
   const { isUserJoined, onJoinGame, onSendFeedback } = props;
   const currentGame = useSelector(getCurrentGame);
   const userData = useSelector(getUserDataFromStore);
+  const feedbacks = useSelector(getFeedbacks);
+  const { initializeFeedbacks } = useStore();
+
   const navigate = useNavigate();
 
   const joinGame = (event: any) => {
     onJoinGame(event.target.id);
   };
+
+  useEffect(() => {
+    if (!feedbacks.length) {
+      getDocs(collection(db, "feedbacks")).then((querySnapshot) => {
+        const receivedFeedbacks = querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          docId: doc.id,
+        }));
+        initializeFeedbacks(receivedFeedbacks as IFeedback[]);
+      });
+    }
+  }, []);
 
   const sendFeedback = (event: any) => {
     const currentPlayer = currentGame.players.filter(
@@ -61,16 +84,29 @@ const Players = (props: any) => {
               {avatarNameFormatter(player.fullName)}
             </Avatar>
             <h4>{player.fullName}</h4>
-            {player.uid !== userData.uid && isUserJoined && (
-              <Button
-                id={"b" + player.uid}
-                variant="outlined"
-                sx={{ position: "absolute", right: "10px" }}
-                onClick={sendFeedback}
-              >
-                ★
-              </Button>
-            )}
+            {player.uid !== userData.uid &&
+              isUserJoined &&
+              currentGame.status === "finished" &&
+              feedbacks.some(
+                (feedback) => feedback.receiver.uid !== player.uid
+              ) && (
+                <Button
+                  id={"b" + player.uid}
+                  variant="outlined"
+                  sx={{ position: "absolute", right: "10px" }}
+                  onClick={sendFeedback}
+                >
+                  ★
+                </Button>
+              )}
+            {player.uid !== userData.uid &&
+              isUserJoined &&
+              currentGame.status === "finished" &&
+              feedbacks.some(
+                (feedback) => feedback.receiver.uid === player.uid
+              ) && (
+                <span className={classes.feedbackStatus}>Feedback sent!</span>
+              )}
           </div>
         ))}
     </div>

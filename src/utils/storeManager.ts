@@ -6,16 +6,20 @@ import {
   addCommentToGame,
   addCurrentGame,
   addCurrentUserUId,
+  addFeedback,
   addNewGame,
   addUserData,
   addUsers,
+  initFeedbacks,
   joinGame,
   removeCurrentUser,
   removeUserData,
+  updateFeedback,
   updateGame,
   updateUser,
 } from "../store/store";
 import { IComment } from "../interfaces/comment";
+import { IFeedback } from "../interfaces/feedback";
 import { IGame } from "../interfaces/game";
 import { IPlayer } from "../interfaces/player";
 import { IRootState } from "../store/interfaces";
@@ -68,6 +72,18 @@ export const useStore = () => {
     dispatch(updateUser(user));
   };
 
+  const initializeFeedbacks = (feedbacks: IFeedback[]) => {
+    dispatch(initFeedbacks(feedbacks));
+  };
+
+  const addNewFeedback = (feedback: IFeedback) => {
+    dispatch(addFeedback(feedback));
+  };
+
+  const updateFeedbackById = (feedback: IFeedback) => {
+    dispatch(updateFeedback(feedback));
+  };
+
   return {
     addUserDataToStore,
     addCurrentUserToStore,
@@ -80,6 +96,9 @@ export const useStore = () => {
     addComment,
     addAllUsersToStore,
     updateUserById,
+    initializeFeedbacks,
+    addNewFeedback,
+    updateFeedbackById,
   };
 };
 
@@ -121,4 +140,9 @@ export const getCurrentGame = createSelector(
 export const getAllUsers = createSelector(
   (state: IRootState) => state.users,
   (users) => users.users
+);
+
+export const getFeedbacks = createSelector(
+  (state: IRootState) => state.users,
+  (users) => users.feedbacks
 );

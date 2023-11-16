@@ -5,5 +5,6 @@ export interface IFeedback {
   estimate: string | null;
   message: string;
   gameId: string;
-  author: IPlayer
+  author: IPlayer;
+  receiver: IPlayer;
 }
