@@ -70,19 +70,19 @@ const OverallRatingPage = () => {
       center: true,
     },
     {
-      name: "Player Height",
+      name: "Player Height (cm)",
       selector: (row: any) => (row.userHeight ? row.userHeight : null),
       sortable: true,
       center: true,
     },
     {
-      name: "Player Weight",
+      name: "Player Weight (cm)",
       selector: (row: any) => (row.userWeight ? row.userWeight : null),
       sortable: true,
       center: true,
     },
     {
-      name: "Max Jump height",
+      name: "Max Jump height (cm)",
       selector: (row: any) => (row.maxJumpHeight ? row.maxJumpHeight : null),
       sortable: true,
       center: true,

@@ -55,7 +55,7 @@ const ViewUserProfilePage = () => {
         <h5>Characteristics</h5>
         <div className="row">
           <div className={`${classes.label} col-4`}>
-            <h6>Player Height:</h6>
+            <h6>Player Height (cm):</h6>
           </div>
           <p className={`${classes.value} col-6`}>
             {userData?.characteristics?.userHeight}
@@ -63,7 +63,7 @@ const ViewUserProfilePage = () => {
         </div>
         <div className="row">
           <div className={`${classes.label} col-4`}>
-            <h6>Player Weight:</h6>
+            <h6>Player Weight (cm):</h6>
           </div>
           <p className={`${classes.value} col-6`}>
             {userData?.characteristics?.userWeight}
