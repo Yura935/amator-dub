@@ -154,9 +154,18 @@ const OverallRatingPage = () => {
       style: {
         backgroundColor: "#6c757d",
         color: "white",
+        cursor: "pointer",
       },
     },
   ];
+
+  const customStyles = {
+    rows: {
+      style: {
+        cursor: "pointer",
+      },
+    },
+  };
 
   // A super simple expandable component.
   //   const ExpandedComponent = (props: { data: any }) => (
@@ -180,6 +189,7 @@ const OverallRatingPage = () => {
           subHeader
           subHeaderComponent={subHeaderComponentMemo}
           onRowClicked={viewPlayerProfile}
+          customStyles={customStyles}
           // selectableRowsComponent={<input type="checkbox" />}
           // selectableRowsComponentProps={selectProps}
           // sortIcon={sortIcon}
