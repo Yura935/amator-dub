@@ -1,5 +1,5 @@
 import { collection, getDocs } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DataTable from "react-data-table-component";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -10,6 +10,7 @@ import {
   getUserDataFromStore,
   useStore,
 } from "../../utils/storeManager";
+import Filter from "./Filter/Filter";
 import { IFeedback } from "../../interfaces/feedback";
 import TableSkeleton from "../../skeletons/TableSkeleton";
 import { db } from "../../firebase";
@@ -23,8 +24,31 @@ const OverallRatingPage = () => {
   const [data, setData] = useState<any[]>([]);
   const feedbacks = useSelector(getFeedbacks);
   const { initializeFeedbacks } = useStore();
-
   const users = useSelector(getAllUsers);
+  const [filterText, setFilterText] = useState("");
+  const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const filteredItems = data.filter(
+    (item) =>
+      item.fullName &&
+      item.fullName.toLowerCase().includes(filterText.toLowerCase())
+  );
+
+  const subHeaderComponentMemo = useMemo(() => {
+    const handleClear = () => {
+      if (filterText) {
+        setResetPaginationToggle(!resetPaginationToggle);
+        setFilterText("");
+      }
+    };
+
+    return (
+      <Filter
+        onFilter={(e) => setFilterText(e.target.value)}
+        onClear={handleClear}
+        filterText={filterText}
+      />
+    );
+  }, [filterText, resetPaginationToggle]);
 
   const columns = [
     {
@@ -148,10 +172,13 @@ const OverallRatingPage = () => {
           pagination
           //   dense
           columns={columns}
-          data={data}
+          data={filteredItems}
           defaultSortFieldId={8}
           defaultSortAsc={false}
           conditionalRowStyles={conditionalRowStyles}
+          paginationResetDefaultPage={resetPaginationToggle}
+          subHeader
+          subHeaderComponent={subHeaderComponentMemo}
           // selectableRowsComponent={<input type="checkbox" />}
           // selectableRowsComponentProps={selectProps}
           // sortIcon={sortIcon}
