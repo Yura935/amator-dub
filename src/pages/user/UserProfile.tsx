@@ -1,35 +1,44 @@
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { Card } from "@mui/joy";
 import moment from "moment";
+import { useSelector } from "react-redux";
 
+import { getAllUsers, getUserDataFromStore } from "../../utils/storeManager";
+import { IUser } from "../../interfaces/user";
 import Loader from "../../components/loader/Loader";
 import { MainContext } from "../../context/main/mainContext";
-import { getUserDataFromStore } from "../../utils/storeManager";
 
 import classes from "./UserProfile.module.scss";
-import { useSelector } from "react-redux";
 
 const UserProfilePage = () => {
   // const DOMAIN = process.env.AMATOR_DUB_DOMAIN;
   const location = useLocation();
   const currentLocation = location.pathname.split("/");
   const { isLoading, setLoadingStatus } = useContext(MainContext);
+  const params = useParams();
 
   const [mode, setMode] = useState(currentLocation[currentLocation.length - 1]);
   const { showDeleteUserModal } = useContext(MainContext);
   const navigate = useNavigate();
   const userData = useSelector(getUserDataFromStore);
+  const allUsers = useSelector(getAllUsers);
+  const isMe = params.uid ? params.uid === userData.uid : true;
+  const [user, setUser] = useState<IUser | null>(null);
 
   useEffect(() => {
-    !userData.uid ? setLoadingStatus(true) : setLoadingStatus(false);
-    navigate("/user");
-    setMode("user");
-  }, [userData]);
+    if (!user) {
+      const curUser = allUsers.filter((u) => u.uid === params.uid)[0];
+      curUser ? setLoadingStatus(false) : setLoadingStatus(true);
+      navigate(`/user/${params.uid}`);
+      setMode("user");
+      setUser(curUser);
+    }
+  }, [allUsers]);
 
   const showUserProfile = () => {
     setMode("user");
-    navigate("");
+    navigate(`${params.uid ? params.uid : userData.uid}`);
   };
 
   const editUserProfile = () => {
@@ -63,14 +72,18 @@ const UserProfilePage = () => {
               >
                 View Account
               </button>
-              <button
-                className={
-                  mode === "edit" ? "btn btn-default active" : "btn btn-default"
-                }
-                onClick={editUserProfile}
-              >
-                Edit Account
-              </button>
+              {isMe && (
+                <button
+                  className={
+                    mode === "edit"
+                      ? "btn btn-default active"
+                      : "btn btn-default"
+                  }
+                  onClick={editUserProfile}
+                >
+                  Edit Account
+                </button>
+              )}
               {/* <button
                 className="btn btn-default"
                 onClick={() => showDeleteUserModal()}
@@ -82,19 +95,43 @@ const UserProfilePage = () => {
           <div className="col-md-8 col-md-offset-2">
             <div className="media d-flex">
               <div className={classes["pull-left"]}>
-                <img
-                  className={classes["profile-icon"]}
-                  src="./userIcon.svg"
-                  alt="user icon"
-                />
+                <div className={classes["profile-icon"]}></div>
               </div>
               <div className={classes["media-body"]}>
-                <h4>{userData?.fullName}</h4>
-                <div className="d-flex">
-                  <div className={classes.registrationDate}></div>
-                  Registered from{" "}
-                  {moment(userData?.registrationDate).format("MMMM Do YYYY")}
-                </div>
+                {!user && (
+                  <>
+                    <div className="placeholder-glow">
+                      <div
+                        className="placeholder"
+                        style={{
+                          width: "200px",
+                          height: "30px",
+                          marginBottom: "5px",
+                        }}
+                      ></div>
+                    </div>
+                    <div className="placeholder-glow">
+                      <div
+                        className="placeholder"
+                        style={{
+                          width: "200px",
+                          height: "30px",
+                          marginBottom: "5px",
+                        }}
+                      ></div>
+                    </div>
+                  </>
+                )}
+                {user && (
+                  <>
+                    <h4>{user?.fullName}</h4>
+                    <div className="d-flex">
+                      <div className={classes.registrationDate}></div>
+                      Registered from{" "}
+                      {moment(user?.registrationDate).format("MMMM Do YYYY")}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             <hr className="mt-4 mb-4" />

@@ -12,7 +12,7 @@ import { db } from "../../../firebase";
 import classes from "./EditUserProfile.module.scss";
 
 const EditUserProfilePage = () => {
-  const { addUserDataToStore } = useStore();
+  const { addUserDataToStore, updateUserById } = useStore();
   const userData = useSelector(getUserDataFromStore);
 
   const [userProfileData, setUserProfileData] = useState({
@@ -54,6 +54,7 @@ const EditUserProfilePage = () => {
     updateDoc(doc(db, "users", userProfileData?.docId), { ...userProfileData })
       .then((data) => {
         addUserDataToStore(userProfileData);
+        updateUserById(userProfileData);
         toast.success(
           <Toastr
             itemName="Success"

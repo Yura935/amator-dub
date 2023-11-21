@@ -1,11 +1,20 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import { getUserDataFromStore } from "../../../utils/storeManager";
+import { IUser } from "../../../interfaces/user";
+import { getAllUsers } from "../../../utils/storeManager";
 
 import classes from "./ViewUserProfile.module.scss";
 
 const ViewUserProfilePage = () => {
-  const userData = useSelector(getUserDataFromStore);
+  const params = useParams();
+  const allUsers = useSelector(getAllUsers);
+  const [userData, setUserData] = useState<IUser | null>(null);
+
+  useEffect(() => {
+    setUserData(allUsers.filter((u) => u.uid === params.uid)[0]);
+  }, [allUsers]);
 
   return (
     <>

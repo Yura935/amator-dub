@@ -133,7 +133,7 @@ const OverallRatingPage = () => {
   }, [users]);
 
   const viewPlayerProfile = (event: any) => {
-    navigate(`user/${event.target.id}`);
+    navigate(`/user/${event.uid}`);
   };
 
   useEffect(() => {
@@ -179,6 +179,7 @@ const OverallRatingPage = () => {
           paginationResetDefaultPage={resetPaginationToggle}
           subHeader
           subHeaderComponent={subHeaderComponentMemo}
+          onRowClicked={viewPlayerProfile}
           // selectableRowsComponent={<input type="checkbox" />}
           // selectableRowsComponentProps={selectProps}
           // sortIcon={sortIcon}

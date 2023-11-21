@@ -18,7 +18,7 @@ const router = (
       <Route element={<Guard />}>
         <Route path="/" element={<MainPage />} errorElement={<NotFoundPage />}>
           <Route path="user" element={<UserProfilePage />}>
-            <Route path="" element={<ViewUserProfilePage />} />
+            <Route path=":uid" element={<ViewUserProfilePage />} />
             <Route path="edit" element={<EditUserProfilePage />} />
           </Route>
           <Route path="games" element={<GamesPage />} />

@@ -7,16 +7,19 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { signOut } from "firebase/auth";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 import { useState } from "react";
 
 import Toastr from "../toastr/Toastr";
 import { auth } from "../../firebase";
+import { getUserDataFromStore } from "../../utils/storeManager";
 
 import classes from "./Header.module.scss";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const userData = useSelector(getUserDataFromStore);
 
   const openUserProfilePage = () => {
     navigate("/");
@@ -53,7 +56,7 @@ const Header = () => {
         {isMenuOpen && (
           <ul className={classes.profileMenu}>
             <li>
-              <Link to="/user" onClick={openProfileMenu}>
+              <Link to={`/user/${userData.uid}`} onClick={openProfileMenu}>
                 <FontAwesomeIcon size="xl" cursor="pointer" icon={faUserGear} />
                 <span>Account Profile</span>
               </Link>
