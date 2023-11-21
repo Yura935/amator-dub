@@ -29,7 +29,7 @@ const OverallRatingPage = () => {
   const columns = [
     {
       name: "",
-      selector: (row: any) => row.id,
+      selector: (row: any, index: any) => index + 1,
       width: "50px",
       center: true,
     },
@@ -40,20 +40,26 @@ const OverallRatingPage = () => {
       center: true,
     },
     {
+      name: "Age",
+      selector: (row: any) => row.age,
+      sortable: true,
+      center: true,
+    },
+    {
       name: "Player Height",
-      selector: (row: any) => (row.userHeight ? row.userHeight : "-"),
+      selector: (row: any) => (row.userHeight ? row.userHeight : null),
       sortable: true,
       center: true,
     },
     {
       name: "Player Weight",
-      selector: (row: any) => (row.userWeight ? row.userWeight : "-"),
+      selector: (row: any) => (row.userWeight ? row.userWeight : null),
       sortable: true,
       center: true,
     },
     {
       name: "Max Jump height",
-      selector: (row: any) => (row.maxJumpHeight ? row.maxJumpHeight : "-"),
+      selector: (row: any) => (row.maxJumpHeight ? row.maxJumpHeight : null),
       sortable: true,
       center: true,
     },
@@ -73,21 +79,30 @@ const OverallRatingPage = () => {
 
   useEffect(() => {
     if (users.length && !isDataLoaded) {
-      console.log(users);
       const rows: any[] = [];
       users.forEach((user, index) => {
+        let userFeedbackEstimate = 0;
+        let count = 0;
+        const currentUserFeedback = feedbacks.filter(
+          (feedback) => feedback.receiver.uid === user.uid
+        );
+        currentUserFeedback.forEach((fb) => {
+          userFeedbackEstimate += Number(fb.estimate);
+          count++;
+        });
         const rowData = {
           id: index + 1,
           fullName: user.fullName,
+          age: user.age,
           userHeight: user.characteristics.userHeight,
           userWeight: user.characteristics.userWeight,
           maxJumpHeight: user.characteristics.maxJumpHeight,
           playedGamesCount: user.characteristics.playedGamesCount,
-          playerFeedback: 0,
+          playerFeedback: Math.round(userFeedbackEstimate / count) | 0,
+          uid: user.uid,
         };
         rows.push(rowData);
       });
-      console.log(data);
       setData(rows);
       setIsDataLoaded(true);
     }
@@ -109,6 +124,16 @@ const OverallRatingPage = () => {
     }
   }, []);
 
+  const conditionalRowStyles = [
+    {
+      when: (row: any) => row.uid === userData.uid,
+      style: {
+        backgroundColor: "#6c757d",
+        color: "white",
+      },
+    },
+  ];
+
   // A super simple expandable component.
   //   const ExpandedComponent = (props: { data: any }) => (
   //     <pre>{JSON.stringify(props.data, null, 2)}</pre>
@@ -124,6 +149,9 @@ const OverallRatingPage = () => {
           //   dense
           columns={columns}
           data={data}
+          defaultSortFieldId={8}
+          defaultSortAsc={false}
+          conditionalRowStyles={conditionalRowStyles}
           // selectableRowsComponent={<input type="checkbox" />}
           // selectableRowsComponentProps={selectProps}
           // sortIcon={sortIcon}
@@ -136,7 +164,7 @@ const OverallRatingPage = () => {
           colCount={columns.length}
           rowCount={15}
           itemHeight="40px"
-          itemWidth="177px"
+          itemWidth="154px"
         />
       )}
     </section>

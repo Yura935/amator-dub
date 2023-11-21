@@ -11,7 +11,7 @@ import classes from "./UserProfile.module.scss";
 import { useSelector } from "react-redux";
 
 const UserProfilePage = () => {
-  const DOMAIN = process.env.AMATOR_DUB_DOMAIN;
+  // const DOMAIN = process.env.AMATOR_DUB_DOMAIN;
   const location = useLocation();
   const currentLocation = location.pathname.split("/");
   const { isLoading, setLoadingStatus } = useContext(MainContext);
@@ -71,12 +71,12 @@ const UserProfilePage = () => {
               >
                 Edit Account
               </button>
-              <button
+              {/* <button
                 className="btn btn-default"
                 onClick={() => showDeleteUserModal()}
               >
                 Delete Account
-              </button>
+              </button> */}
             </div>
           </div>
           <div className="col-md-8 col-md-offset-2">

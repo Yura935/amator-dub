@@ -1,5 +1,5 @@
 import { Avatar, Button } from "@mui/joy";
-import { memo, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { IPlayer } from "../../../interfaces/player";
@@ -22,6 +22,7 @@ const Players = (props: any) => {
   const userData = useSelector(getUserDataFromStore);
   const feedbacks = useSelector(getFeedbacks);
   const { initializeFeedbacks } = useStore();
+  const [isFeedbacksLoaded, setIsFeedbacksLoaded] = useState(false);
 
   const navigate = useNavigate();
 
@@ -37,6 +38,7 @@ const Players = (props: any) => {
           docId: doc.id,
         }));
         initializeFeedbacks(receivedFeedbacks as IFeedback[]);
+        setIsFeedbacksLoaded(true);
       });
     }
   }, []);
@@ -87,8 +89,9 @@ const Players = (props: any) => {
             {player.uid !== userData.uid &&
               isUserJoined &&
               currentGame.status === "finished" &&
-              feedbacks.some(
-                (feedback) => feedback.receiver.uid !== player.uid
+              isFeedbacksLoaded &&
+              !feedbacks.some(
+                (feedback) => feedback.receiver.uid === player.uid
               ) && (
                 <Button
                   id={"b" + player.uid}
@@ -102,6 +105,7 @@ const Players = (props: any) => {
             {player.uid !== userData.uid &&
               isUserJoined &&
               currentGame.status === "finished" &&
+              isFeedbacksLoaded &&
               feedbacks.some(
                 (feedback) => feedback.receiver.uid === player.uid
               ) && (

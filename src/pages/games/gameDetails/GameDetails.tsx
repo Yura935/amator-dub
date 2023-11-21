@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 
 import {
   getCurrentGame,
+  getFeedbacks,
   getUserDataFromStore,
   useStore,
 } from "../../../utils/storeManager";
@@ -39,7 +40,7 @@ const GameDetailsPage = () => {
   const currentGame = useSelector(getCurrentGame);
   const params = useParams();
   const [game, setGame] = useState<IGame | undefined>(currentGame);
-  const { addPlayerToGame, addCurrentGameToStore, updateFeedbackById } = useStore();
+  const { addPlayerToGame, addCurrentGameToStore, addNewFeedback } = useStore();
   const userData = useSelector(getUserDataFromStore);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState("edit");
@@ -167,7 +168,7 @@ const GameDetailsPage = () => {
     addDoc(collection(db, "feedbacks"), { ...feedback })
       .then((res) => {
         console.log(res);
-        updateFeedbackById({...feedback, docId: res.id});
+        addNewFeedback({ ...feedback, docId: res.id });
         toast.success(
           <Toastr
             itemName="Success"
