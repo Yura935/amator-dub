@@ -13,7 +13,7 @@ export const Guard = () => {
     location.pathname !== "/" ? (
       <Outlet />
     ) : (
-      <Navigate to="/user" />
+      <Navigate to="/games" />
     )
   ) : (
     <Navigate to="/signIn" />
