@@ -1,20 +1,21 @@
 import { Avatar, Button } from "@mui/joy";
+import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-import { IPlayer } from "../../../interfaces/player";
 import {
   getCurrentGame,
   getFeedbacks,
   getUserDataFromStore,
   useStore,
 } from "../../../utils/storeManager";
+import { IFeedback } from "../../../interfaces/feedback";
+import { IPlayer } from "../../../interfaces/player";
+import { db } from "../../../firebase";
+
 import { useNavigate } from "react-router-dom";
 
 import classes from "./Players.module.scss";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../../firebase";
-import { IFeedback } from "../../../interfaces/feedback";
 
 const Players = (props: any) => {
   const { isUserJoined, onJoinGame, onSendFeedback } = props;
@@ -40,6 +41,8 @@ const Players = (props: any) => {
         initializeFeedbacks(receivedFeedbacks as IFeedback[]);
         setIsFeedbacksLoaded(true);
       });
+    } else {
+      setIsFeedbacksLoaded(true);
     }
   }, []);
 
@@ -47,12 +50,14 @@ const Players = (props: any) => {
     const currentPlayer = currentGame.players.filter(
       (pl) => pl.uid === event.target.id.slice(1)
     )[0];
-    console.log(currentPlayer);
     onSendFeedback(currentPlayer);
   };
 
   const viewPlayerProfile = (event: any) => {
-    navigate(`user/${event.target.id}`);
+    if (event.target.type === "button") {
+      return;
+    }
+    navigate(`/user/${event.target.id}`);
   };
 
   const avatarNameFormatter = (name: string): string => {
@@ -81,7 +86,12 @@ const Players = (props: any) => {
       )}
       {currentGame.players?.length > 0 &&
         currentGame.players.map((player: IPlayer) => (
-          <div key={player.uid} id={player.uid} className={classes.player}>
+          <div
+            key={player.uid}
+            id={player.uid}
+            className={classes.player}
+            onClick={viewPlayerProfile}
+          >
             <Avatar sx={{ marginRight: "40px" }} src={player.avatar}>
               {avatarNameFormatter(player.fullName)}
             </Avatar>

@@ -23,6 +23,8 @@ import ToggleGroupToolbar from "../../../components/toggleGroupToolbar/ToggleGro
 import { getUserDataFromStore } from "../../../utils/storeManager";
 
 import classes from "./GamePopup.module.scss";
+import { toast } from "react-toastify";
+import Toastr from "../../../components/toastr/Toastr";
 
 const GamePopup = (props: {
   open: boolean;
@@ -216,21 +218,27 @@ const GamePopup = (props: {
   };
 
   const submitSendingFeedback = () => {
-    const feedback: IFeedback = {
-      docId: "",
-      estimate: feedbackEstimate,
-      message: feedbackMessageRef.current!.value,
-      gameId: props.game!.docId!,
-      author: {
-        avatar: userData.avatar,
-        fullName: userData.fullName,
+    if (feedbackEstimate) {
+      const feedback: IFeedback = {
+        docId: "",
+        estimate: feedbackEstimate,
+        message: feedbackMessageRef.current!.value,
         gameId: props.game!.docId!,
-        uid: userData.uid,
-      },
-      receiver: props.receiverPlayer!,
-    };
-    props.onSendFeedback!(feedback);
-    closeModal();
+        author: {
+          avatar: userData.avatar,
+          fullName: userData.fullName,
+          gameId: props.game!.docId!,
+          uid: userData.uid,
+        },
+        receiver: props.receiverPlayer!,
+      };
+      props.onSendFeedback!(feedback);
+      closeModal();
+    } else {
+      toast.warn(
+        <Toastr itemName="Empty field" message="You have to choose estimate!" />
+      );
+    }
   };
 
   return (
