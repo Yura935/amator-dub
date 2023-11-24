@@ -54,7 +54,7 @@ const Players = (props: any) => {
   };
 
   const viewPlayerProfile = (event: any) => {
-    if (event.target.type === "button") {
+    if (event.target.type === "button" || event.target.role === "log") {
       return;
     }
     navigate(`/user/${event.target.id}`);
@@ -119,7 +119,9 @@ const Players = (props: any) => {
               feedbacks.some(
                 (feedback) => feedback.receiver.uid === player.uid
               ) && (
-                <span className={classes.feedbackStatus}>Feedback sent!</span>
+                <span role="log" className={classes.feedbackStatus}>
+                  Feedback sent!
+                </span>
               )}
           </div>
         ))}

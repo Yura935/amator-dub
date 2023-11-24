@@ -163,10 +163,12 @@ const GamePopup = (props: {
   const saveNewGame = () => {
     if (
       game.hallName &&
+      game.level &&
       game.maxPlayersCount &&
+      game.location &&
+      game.price &&
       game.startDate &&
-      game.endDate &&
-      game.location
+      game.endDate
     ) {
       const isItalic = formats.find((format) => format === "italic");
       const isBold = formats.find((format) => format === "bold");
@@ -195,6 +197,10 @@ const GamePopup = (props: {
       };
       props.onActionGame(newGame);
       clearFields();
+    } else {
+      toast.warn(
+        <Toastr itemName="Invalid field" message="Please fill all fields" />
+      );
     }
   };
 
@@ -257,7 +263,7 @@ const GamePopup = (props: {
             <div className="row mb-3">
               <div className="col-6">
                 <label className="mb-1" htmlFor="hallName">
-                  Hall name:
+                  Hall name<span className="text-danger">*</span>:
                 </label>
                 <Input
                   id="hallName"
@@ -269,7 +275,7 @@ const GamePopup = (props: {
               </div>
               <div className="col-6">
                 <label className="mb-1" htmlFor="gameLevel">
-                  Game level:
+                  Game level<span className="text-danger">*</span>:
                 </label>
                 <Select
                   id="gameLevel"
@@ -287,7 +293,7 @@ const GamePopup = (props: {
             <div className="row mb-3">
               <div className="col-6">
                 <label className="mb-1" htmlFor="maxPlayersCount">
-                  Players count (max):
+                  Players count (max)<span className="text-danger">*</span>:
                 </label>
                 <div className="d-flex align-items-center p-0">
                   <Input
@@ -312,7 +318,7 @@ const GamePopup = (props: {
               </div>
               <div className="col-6">
                 <label className="mb-1" htmlFor="location">
-                  Location:
+                  Location<span className="text-danger">*</span>:
                 </label>
                 <Input
                   id="location"
@@ -326,7 +332,7 @@ const GamePopup = (props: {
             <div className="row mb-3">
               <div className="col-4">
                 <label className="mb-1" htmlFor="price">
-                  Price:
+                  Price<span className="text-danger">*</span>:
                 </label>
                 <Input
                   type="number"
@@ -340,7 +346,7 @@ const GamePopup = (props: {
               </div>
               <div className="col-4">
                 <label className="mb-1" htmlFor="startDate">
-                  Start Date:
+                  Start Date<span className="text-danger">*</span>:
                 </label>
                 <ReactDatePicker
                   showTimeSelect
@@ -358,7 +364,7 @@ const GamePopup = (props: {
               </div>
               <div className="col-4">
                 <label className="mb-1" htmlFor="endDate">
-                  End Date:
+                  End Date<span className="text-danger">*</span>:
                 </label>
                 <ReactDatePicker
                   showTimeSelect
