@@ -61,6 +61,10 @@
   .formControl:focus {
     box-shadow: 0 0 0 0.15rem #0d6efd40;
   }
+
+  .formControl::placeholder {
+    font-style: italic;
+  }
 }
 
 .hr {

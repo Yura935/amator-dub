@@ -90,7 +90,7 @@ const SignUpPage = () => {
           console.error("Error adding document: ", e);
         }
         console.log(userCredentials);
-        navigate("/user");
+        navigate(`/user/${userCredentials.user.uid}`);
         setLoadingStatus(false);
         toast.success(
           <Toastr itemName="Success" message="Welcome to AmatorDub." />

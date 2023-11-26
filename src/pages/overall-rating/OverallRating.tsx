@@ -102,7 +102,7 @@ const OverallRatingPage = () => {
   ];
 
   useEffect(() => {
-    if (users.length && !isDataLoaded) {
+    if (feedbacks.length && !isDataLoaded) {
       const rows: any[] = [];
       users.forEach((user, index) => {
         let userFeedbackEstimate = 0;
@@ -130,7 +130,7 @@ const OverallRatingPage = () => {
       setData(rows);
       setIsDataLoaded(true);
     }
-  }, [users]);
+  }, [users, feedbacks]);
 
   const viewPlayerProfile = (event: any) => {
     navigate(`/user/${event.uid}`);
