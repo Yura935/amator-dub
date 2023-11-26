@@ -59,7 +59,7 @@ const LoginPage = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         console.log(userCredentials);
-        navigate("/user");
+        navigate(`/user/${userCredentials.user.uid}`);
         setLoadingStatus(false);
         toast.success(
           <Toastr itemName="Success" message="Welcome to AmatorDub." />
