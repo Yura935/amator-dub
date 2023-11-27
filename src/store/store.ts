@@ -11,13 +11,13 @@ const store = configureStore({
   reducer: {
     user: userSlice.reducer,
     games: gamesSlice.reducer,
-    users: usersSlice.reducer,
+    users: usersSlice.reducer
   },
   // Fix error: "A non-serializable value was detected in the state"
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false,
-    }),
+      serializableCheck: false
+    })
 });
 
 export {
@@ -34,6 +34,6 @@ export {
   updateUser,
   addFeedback,
   initFeedbacks,
-  updateFeedback,
+  updateFeedback
 };
 export default store;

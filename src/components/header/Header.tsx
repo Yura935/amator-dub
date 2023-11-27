@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   faPersonWalkingArrowRight,
   faUser,
-  faUserGear,
+  faUserGear
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { signOut } from "firebase/auth";

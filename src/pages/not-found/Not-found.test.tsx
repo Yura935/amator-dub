@@ -10,7 +10,7 @@ describe("Not-found component", () => {
 
   beforeEach(() => {
     const router = createMemoryRouter(routesConfig, {
-      initialEntries: ["/not"],
+      initialEntries: ["/not"]
     });
     component = render(<RouterProvider router={router} />);
   });

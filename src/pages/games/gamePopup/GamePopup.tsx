@@ -8,23 +8,23 @@ import {
   Option,
   Select,
   Textarea,
-  Typography,
+  Typography
 } from "@mui/joy";
 import { useEffect, useMemo, useRef, useState } from "react";
 import ReactDatePicker from "react-datepicker";
 import moment from "moment";
+import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 
 import { GameLevel } from "../../../types/gameLevel";
 import { IFeedback } from "../../../interfaces/feedback";
 import { IGame } from "../../../interfaces/game";
 import { IPlayer } from "../../../interfaces/player";
+import Toastr from "../../../components/toastr/Toastr";
 import ToggleGroupToolbar from "../../../components/toggleGroupToolbar/ToggleGroupToolbar";
 import { getUserDataFromStore } from "../../../utils/storeManager";
 
 import classes from "./GamePopup.module.scss";
-import { toast } from "react-toastify";
-import Toastr from "../../../components/toastr/Toastr";
 
 const GamePopup = (props: {
   open: boolean;
@@ -50,7 +50,7 @@ const GamePopup = (props: {
       fontStyle: "",
       fontWeight: "",
       text: "",
-      textDecoration: "",
+      textDecoration: ""
     },
     players: [],
     playersCount: "",
@@ -58,7 +58,7 @@ const GamePopup = (props: {
     startDate: null,
     status: "active",
     comments: [],
-    docId: "",
+    docId: ""
   };
   const [game, setGame] = useState<IGame>(initialGameState);
   const [notes, setNotes] = useState("");
@@ -71,7 +71,7 @@ const GamePopup = (props: {
   const onGameHallNameChangeHandler = (event: any) => {
     setGame((prevState) => {
       const updatedGame: IGame = {
-        ...prevState,
+        ...prevState
       };
       updatedGame.hallName = event.target.value;
       return updatedGame;
@@ -81,7 +81,7 @@ const GamePopup = (props: {
   const onGameMaxPlayersCountChangeHandler = (event: any) => {
     setGame((prevState) => {
       const updatedGame: IGame = {
-        ...prevState,
+        ...prevState
       };
       updatedGame.maxPlayersCount = event.target.value;
       return updatedGame;
@@ -91,7 +91,7 @@ const GamePopup = (props: {
   const onGameLocationChangeHandler = (event: any) => {
     setGame((prevState) => {
       const updatedGame: IGame = {
-        ...prevState,
+        ...prevState
       };
       updatedGame.location = event.target.value;
       return updatedGame;
@@ -101,7 +101,7 @@ const GamePopup = (props: {
   const onGamePriceChangeHandler = (event: any) => {
     setGame((prevState) => {
       const updatedGame: IGame = {
-        ...prevState,
+        ...prevState
       };
       updatedGame.price = event.target.value;
       return updatedGame;
@@ -111,7 +111,7 @@ const GamePopup = (props: {
   const onGameStartDateChangeHandler = (date: any) => {
     setGame((prevState) => {
       const updatedGame: IGame = {
-        ...prevState,
+        ...prevState
       };
       updatedGame.startDate = date;
       return updatedGame;
@@ -121,7 +121,7 @@ const GamePopup = (props: {
   const onGameEndDateChangeHandler = (date: any) => {
     setGame((prevState) => {
       const updatedGame: IGame = {
-        ...prevState,
+        ...prevState
       };
       updatedGame.endDate = date;
       return updatedGame;
@@ -139,7 +139,7 @@ const GamePopup = (props: {
   ) => {
     setGame((prevState) => {
       const updatedGame: IGame = {
-        ...prevState,
+        ...prevState
       };
       updatedGame.level = newValue;
       return updatedGame;
@@ -191,9 +191,9 @@ const GamePopup = (props: {
           fontStyle: isItalic ? "italic" : "normal",
           fontWeight: isBold ? "bold" : "normal",
           textDecoration: isUnderlined ? "underline" : "none",
-          color,
+          color
         },
-        comments: [],
+        comments: []
       };
       props.onActionGame(newGame);
       clearFields();
@@ -234,9 +234,9 @@ const GamePopup = (props: {
           avatar: userData.avatar,
           fullName: userData.fullName,
           gameId: props.game!.docId!,
-          uid: userData.uid,
+          uid: userData.uid
         },
-        receiver: props.receiverPlayer!,
+        receiver: props.receiverPlayer!
       };
       props.onSendFeedback!(feedback);
       closeModal();
@@ -299,12 +299,12 @@ const GamePopup = (props: {
                   <Input
                     sx={{
                       width: "80%",
-                      marginRight: "10px",
+                      marginRight: "10px"
                     }}
                     type="number"
                     id="maxPlayersCount"
                     required
-                    placeholder="number"
+                    placeholder="Enter number"
                     value={game.maxPlayersCount}
                     onChange={onGameMaxPlayersCountChangeHandler}
                     // onBlur={(event) =>
@@ -400,7 +400,7 @@ const GamePopup = (props: {
                     (format) => format === "underlined"
                   )
                     ? "underline"
-                    : "none",
+                    : "none"
                 }}
                 id="notes"
                 value={notes}

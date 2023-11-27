@@ -33,9 +33,9 @@ const initialState: IRootState = {
         playedGamesCount: 0,
         serving: 0,
         aces: 0,
-        blocks: 0,
-      },
-    },
+        blocks: 0
+      }
+    }
   },
   games: {
     games: [],
@@ -52,7 +52,7 @@ const initialState: IRootState = {
         fontStyle: "",
         fontWeight: "",
         text: "",
-        textDecoration: "",
+        textDecoration: ""
       },
       players: [],
       playersCount: "",
@@ -60,13 +60,13 @@ const initialState: IRootState = {
       startDate: "",
       status: "active",
       docId: "",
-      comments: [],
-    },
+      comments: []
+    }
   },
   users: {
     users: [],
-    feedbacks: [],
-  },
+    feedbacks: []
+  }
 };
 
 export const userSlice = createSlice({
@@ -84,8 +84,8 @@ export const userSlice = createSlice({
     },
     removeUserData: (state) => {
       state.userData = initialState.user.userData;
-    },
-  },
+    }
+  }
 });
 
 export const usersSlice = createSlice({
@@ -110,8 +110,8 @@ export const usersSlice = createSlice({
       state.feedbacks = state.feedbacks.map((feedback) =>
         feedback.docId === action.payload.docId ? action.payload : feedback
       );
-    },
-  },
+    }
+  }
 });
 
 export const gamesSlice = createSlice({
@@ -144,6 +144,6 @@ export const gamesSlice = createSlice({
     },
     addCommentToGame: (state, action: PayloadAction<IComment>) => {
       state.currentGame.comments?.push(action.payload);
-    },
-  },
+    }
+  }
 });

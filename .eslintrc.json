@@ -9,7 +9,13 @@
       "version": "detect"
     }
   },
-  "ignorePatterns": ["coverage/", "node_modules/"],
+  "ignorePatterns": [
+    "coverage/",
+    "node_modules/",
+    ".firebase/",
+    ".github/",
+    "build/"
+  ],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",

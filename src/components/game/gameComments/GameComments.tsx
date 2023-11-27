@@ -8,7 +8,7 @@ import { useState } from "react";
 import {
   getCurrentGame,
   getUserDataFromStore,
-  useStore,
+  useStore
 } from "../../../utils/storeManager";
 import { IComment } from "../../../interfaces/comment";
 import Toastr from "../../toastr/Toastr";
@@ -37,13 +37,13 @@ const GameComments = (props: any) => {
         docId: userData.docId,
         uid: userData.uid,
         avatar: userData.avatar,
-        fullName: userData.fullName,
-      },
+        fullName: userData.fullName
+      }
     };
 
     updateDoc(doc(db, "games", currentGame.docId!), {
       ...currentGame,
-      comments: [...currentGame.comments, comment],
+      comments: [...currentGame.comments, comment]
     })
       .then((data) => {
         addComment(comment);

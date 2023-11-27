@@ -4,7 +4,7 @@ import {
   collection,
   doc,
   getDocs,
-  updateDoc,
+  updateDoc
 } from "firebase/firestore";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Button } from "@mui/joy";
@@ -18,7 +18,7 @@ import {
   getAllUsers,
   getFinishedGamesFromStore,
   getIncomingGamesFromStore,
-  useStore,
+  useStore
 } from "../../utils/storeManager";
 import Game from "../../components/game/Game";
 import GamePopup from "./gamePopup/GamePopup";
@@ -40,7 +40,7 @@ const GamesPage = () => {
     addCurrentGameToStore,
     addNewGameToStore,
     updateGameById,
-    updateUserById,
+    updateUserById
   } = useStore();
   const allGames = useSelector(getAllGamesFromStore);
   const activeGames = useSelector(getActiveGamesFromStore);
@@ -54,7 +54,7 @@ const GamesPage = () => {
     await getDocs(collection(db, "games")).then((querySnapshot) => {
       const games = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
-        docId: doc.id,
+        docId: doc.id
       }));
       const allGames = [...(games as IGame[])];
       const gamesForTab = allGames.filter((game) => {
@@ -89,7 +89,7 @@ const GamesPage = () => {
         fontStyle: "",
         fontWeight: "",
         text: "",
-        textDecoration: "",
+        textDecoration: ""
       },
       players: [],
       playersCount: "",
@@ -97,14 +97,14 @@ const GamesPage = () => {
       startDate: "",
       status: "active",
       comments: [],
-      docId: "",
+      docId: ""
     });
   }, []);
 
   const updateGameStatus = (game: IGame, status: GameStatus) => {
     const docRef = updateDoc(doc(db, "games", game.docId!), {
       ...game,
-      status,
+      status
     });
     updateGameById({ ...game, status });
     setGames((prevState) => {
@@ -124,11 +124,11 @@ const GamesPage = () => {
         ...playedUser,
         characteristics: {
           ...playedUser.characteristics,
-          playedGamesCount: playedUser.characteristics.playedGamesCount + 1,
-        },
+          playedGamesCount: playedUser.characteristics.playedGamesCount + 1
+        }
       };
       updateDoc(doc(db, "users", newPlayedUser?.docId), {
-        ...newPlayedUser,
+        ...newPlayedUser
       })
         .then(() => {
           updateUserById(newPlayedUser);

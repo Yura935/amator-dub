@@ -30,11 +30,7 @@ const MainPage = () => {
           <p className="text-center">will be deleted!</p>
         </section>
         <section className="modal-buttons d-flex justify-content-evenly">
-          <Button
-            color="danger"
-            aria-label="button for deleting account"
-            onClick={() => {}}
-          >
+          <Button color="danger" aria-label="button for deleting account">
             Delete Account
           </Button>
           <Button

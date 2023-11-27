@@ -16,14 +16,14 @@ const EditUserProfilePage = () => {
   const userData = useSelector(getUserDataFromStore);
 
   const [userProfileData, setUserProfileData] = useState({
-    ...userData,
+    ...userData
   });
 
   const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setUserProfileData((prevState) => {
       const updatedValues: Record<string, any> = { ...prevState };
       const updatedCharacteristicsValues: Record<string, any> = {
-        ...prevState.characteristics,
+        ...prevState.characteristics
       };
       for (const [key, value] of Object.entries(updatedValues)) {
         if (key === event.target.id) {
@@ -43,7 +43,7 @@ const EditUserProfilePage = () => {
       updatedValues["characteristics"] = updatedCharacteristicsValues;
       return {
         ...prevState,
-        ...updatedValues,
+        ...updatedValues
       };
     });
   };
@@ -73,19 +73,6 @@ const EditUserProfilePage = () => {
     <Form className="form" onSubmit={onSubmitHandler}>
       <div className={classes["personalInfo"]}>
         <h5>Personal Information</h5>
-        <div className="d-flex align-items-center mb-2">
-          <div className="label col-4">
-            <h6>Email:</h6>
-          </div>
-          <input
-            className="form-control"
-            type="email"
-            name="email"
-            id="email"
-            value={userProfileData?.email}
-            onChange={onChangeHandler}
-          />
-        </div>
         <div className="d-flex align-items-center mb-2">
           <div className="label col-4">
             <h6>City:</h6>

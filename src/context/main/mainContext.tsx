@@ -8,7 +8,7 @@ export const initialGlobalState: IGlobalState = {
   isDeleteUserModalShown: false,
   setLoadingStatus: (status: boolean) => {},
   hideModal: () => {},
-  showDeleteUserModal: () => {},
+  showDeleteUserModal: () => {}
 };
 
 export const MainContext = createContext(initialGlobalState);
@@ -19,19 +19,19 @@ export const MainProvider = ({ children }: BaseProps) => {
   const setLoadingStatus = (status: boolean) => {
     dispatch({
       type: "SET_LOADING_STATUS",
-      payload: status,
+      payload: status
     });
   };
 
   const hideModal = () => {
     dispatch({
-      type: "HIDE_MODAL",
+      type: "HIDE_MODAL"
     });
   };
 
   const showDeleteUserModal = () => {
     dispatch({
-      type: "SHOW_MODAL",
+      type: "SHOW_MODAL"
     });
   };
 
@@ -42,7 +42,7 @@ export const MainProvider = ({ children }: BaseProps) => {
         isDeleteUserModalShown: state.isDeleteUserModalShown,
         setLoadingStatus,
         hideModal,
-        showDeleteUserModal,
+        showDeleteUserModal
       }}
     >
       {children}

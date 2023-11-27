@@ -69,7 +69,7 @@ const Game = (props: { game: IGame }) => {
             textDecoration: game.notes.textDecoration,
             color: game.notes.color,
             fontStyle: game.notes.fontStyle,
-            fontWeight: game.notes.fontWeight,
+            fontWeight: game.notes.fontWeight
           }}
         >
           {game.notes.text}

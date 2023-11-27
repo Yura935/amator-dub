@@ -30,7 +30,7 @@ const ToggleGroupToolbar = (props: {
         gap: 2,
         marginLeft: "10px",
         marginRight: "10px",
-        padding: "5px 10px",
+        padding: "5px 10px"
       }}
     >
       <ToggleButtonGroup
@@ -88,7 +88,7 @@ const ToggleGroupToolbar = (props: {
             margin: "5px",
             borderRadius: "50%",
             width: "1.5em",
-            bgcolor: color,
+            bgcolor: color
           }}
         >
           <div />
@@ -107,7 +107,7 @@ const ToggleGroupToolbar = (props: {
             bottom: 0,
             left: 0,
             whiteSpace: "nowrap",
-            width: "1px",
+            width: "1px"
           }}
         />
       </Button>

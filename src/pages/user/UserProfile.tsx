@@ -56,7 +56,7 @@ const UserProfilePage = () => {
             boxShadow: "lg",
             display: "flex",
             flexDirection: "column",
-            marginBottom: 2,
+            marginBottom: 2
           }}
         >
           <div
@@ -106,7 +106,7 @@ const UserProfilePage = () => {
                         style={{
                           width: "200px",
                           height: "30px",
-                          marginBottom: "5px",
+                          marginBottom: "5px"
                         }}
                       ></div>
                     </div>
@@ -116,7 +116,7 @@ const UserProfilePage = () => {
                         style={{
                           width: "200px",
                           height: "30px",
-                          marginBottom: "5px",
+                          marginBottom: "5px"
                         }}
                       ></div>
                     </div>

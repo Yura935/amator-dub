@@ -6,7 +6,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
-  updateDoc,
+  updateDoc
 } from "firebase/firestore";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,9 +16,8 @@ import { useSelector } from "react-redux";
 
 import {
   getCurrentGame,
-  getFeedbacks,
   getUserDataFromStore,
-  useStore,
+  useStore
 } from "../../../utils/storeManager";
 import GameComments from "../../../components/game/gameComments/GameComments";
 import GamePopup from "../gamePopup/GamePopup";
@@ -59,7 +58,7 @@ const GameDetailsPage = () => {
       uid: userData.uid,
       fullName: userData.fullName,
       avatar: userData.avatar,
-      gameId: id,
+      gameId: id
     };
 
     const updatedGame = { ...game };
@@ -86,7 +85,7 @@ const GameDetailsPage = () => {
     await getDocs(collection(db, "games")).then((querySnapshot) => {
       const games = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
-        docId: doc.id,
+        docId: doc.id
       }));
       const currentGame = games.find((g) => g.docId === params.docId);
       setGame(currentGame as IGame);
@@ -214,7 +213,7 @@ const GameDetailsPage = () => {
                   style={{
                     width: "170px",
                     height: "38px",
-                    marginBottom: "20px",
+                    marginBottom: "20px"
                   }}
                 ></h2>
               </div>

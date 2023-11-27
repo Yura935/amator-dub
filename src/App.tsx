@@ -20,7 +20,7 @@ const App = () => {
     addCurrentUserToStore,
     addUserDataToStore,
     removeCurrentUserFromStore,
-    removeUserDataFromStore,
+    removeUserDataFromStore
   } = useStore();
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const App = () => {
       await getDocs(collection(db, "users")).then((querySnapshot) => {
         const users = querySnapshot.docs.map((doc) => ({
           ...doc.data(),
-          docId: doc.id,
+          docId: doc.id
         }));
         console.log(users);
         addAllUsersToStore(users as IUser[]);

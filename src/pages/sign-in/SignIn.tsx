@@ -33,7 +33,7 @@ const LoginPage = () => {
       onChange: (event: ChangeEvent<HTMLInputElement>) =>
         setEmail(event.target.value),
       inputParams: { placeholder: "Enter email", type: "email" },
-      icon: <b>@</b>,
+      icon: <b>@</b>
     },
     {
       key: "Password",
@@ -48,8 +48,8 @@ const LoginPage = () => {
           icon={faLock}
           color="gray"
         />
-      ),
-    },
+      )
+    }
   ];
 
   const handleSignInSubmit = (event: React.FormEvent) => {
@@ -97,14 +97,14 @@ const LoginPage = () => {
               width: 320,
               maxWidth: "100%",
               boxShadow: "lg",
-              minWidth: "400px",
+              minWidth: "400px"
             }}
           >
             <CardContent
               sx={{
                 alignItems: "center",
                 textAlign: "center",
-                padding: "34px",
+                padding: "34px"
               }}
             >
               <Typography fontSize="lg" fontWeight="lg">

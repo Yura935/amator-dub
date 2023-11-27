@@ -14,7 +14,7 @@ const firebaseConfig = {
   projectId: "amator-dub",
   storageBucket: "amator-dub.appspot.com",
   messagingSenderId: "801117435746",
-  appId: "1:801117435746:web:e7a71a161c651d70e15e3b",
+  appId: "1:801117435746:web:e7a71a161c651d70e15e3b"
 };
 
 // Initialize Firebase

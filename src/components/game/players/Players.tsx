@@ -7,7 +7,7 @@ import {
   getCurrentGame,
   getFeedbacks,
   getUserDataFromStore,
-  useStore,
+  useStore
 } from "../../../utils/storeManager";
 import { IFeedback } from "../../../interfaces/feedback";
 import { IPlayer } from "../../../interfaces/player";
@@ -36,7 +36,7 @@ const Players = (props: any) => {
       getDocs(collection(db, "feedbacks")).then((querySnapshot) => {
         const receivedFeedbacks = querySnapshot.docs.map((doc) => ({
           ...doc.data(),
-          docId: doc.id,
+          docId: doc.id
         }));
         initializeFeedbacks(receivedFeedbacks as IFeedback[]);
         setIsFeedbacksLoaded(true);

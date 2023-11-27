@@ -6,17 +6,17 @@ const MainReducer = (state: IGlobalState, action: IAction) => {
     case "SET_LOADING_STATUS":
       return {
         ...state,
-        isLoading: action.payload,
+        isLoading: action.payload
       };
     case "HIDE_MODAL":
       return {
         ...state,
-        isDeleteUserModalShown: false,
+        isDeleteUserModalShown: false
       };
     case "SHOW_MODAL":
       return {
         ...state,
-        isDeleteUserModalShown: true,
+        isDeleteUserModalShown: true
       };
     default:
       return state;

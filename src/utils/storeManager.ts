@@ -16,7 +16,7 @@ import {
   removeUserData,
   updateFeedback,
   updateGame,
-  updateUser,
+  updateUser
 } from "../store/store";
 import { IComment } from "../interfaces/comment";
 import { IFeedback } from "../interfaces/feedback";
@@ -98,7 +98,7 @@ export const useStore = () => {
     updateUserById,
     initializeFeedbacks,
     addNewFeedback,
-    updateFeedbackById,
+    updateFeedbackById
   };
 };
 

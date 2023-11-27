@@ -37,7 +37,7 @@ const SignUpPage = () => {
       onChange: (event: ChangeEvent<HTMLInputElement>) =>
         setEmail(event.target.value),
       inputParams: { placeholder: "Enter email", type: "email" },
-      icon: <b>@</b>,
+      icon: <b>@</b>
     },
     {
       key: "Password",
@@ -52,8 +52,8 @@ const SignUpPage = () => {
           icon={faLock}
           color="gray"
         />
-      ),
-    },
+      )
+    }
   ];
 
   const signUpHandler = (event: React.FormEvent) => {
@@ -81,8 +81,8 @@ const SignUpPage = () => {
               playedGamesCount: 0,
               serving: null,
               aces: null,
-              blocks: null,
-            },
+              blocks: null
+            }
           });
           console.log("Document written with ID: ", docRef);
         } catch (e: any) {

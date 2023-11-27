@@ -29,7 +29,7 @@ const TableSkeleton = (props: {
                 height: props.itemHeight,
                 width: props.itemWidth,
                 marginRight: "5px",
-                marginBottom: "5px",
+                marginBottom: "5px"
               }}
             ></div>
           ))}

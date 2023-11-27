@@ -8,7 +8,7 @@ import {
   getAllUsers,
   getFeedbacks,
   getUserDataFromStore,
-  useStore,
+  useStore
 } from "../../utils/storeManager";
 import Filter from "./Filter/Filter";
 import { IFeedback } from "../../interfaces/feedback";
@@ -55,50 +55,50 @@ const OverallRatingPage = () => {
       name: "",
       selector: (row: any, index: any) => index + 1,
       width: "50px",
-      center: true,
+      center: true
     },
     {
       name: "FullName",
       selector: (row: any) => row.fullName,
       sortable: true,
-      center: true,
+      center: true
     },
     {
       name: "Age",
       selector: (row: any) => row.age,
       sortable: true,
-      center: true,
+      center: true
     },
     {
       name: "Player Height (cm)",
       selector: (row: any) => (row.userHeight ? row.userHeight : null),
       sortable: true,
-      center: true,
+      center: true
     },
     {
       name: "Player Weight (cm)",
       selector: (row: any) => (row.userWeight ? row.userWeight : null),
       sortable: true,
-      center: true,
+      center: true
     },
     {
       name: "Max Jump height (cm)",
       selector: (row: any) => (row.maxJumpHeight ? row.maxJumpHeight : null),
       sortable: true,
-      center: true,
+      center: true
     },
     {
       name: "Played Games Count",
       selector: (row: any) => (row.playedGamesCount ? row.playedGamesCount : 0),
       sortable: true,
-      center: true,
+      center: true
     },
     {
       name: "Player Rating/Feedback",
       selector: (row: any) => (row.playerFeedback ? row.playerFeedback : 0),
       sortable: true,
-      center: true,
-    },
+      center: true
+    }
   ];
 
   useEffect(() => {
@@ -123,7 +123,7 @@ const OverallRatingPage = () => {
           maxJumpHeight: user.characteristics.maxJumpHeight,
           playedGamesCount: user.characteristics.playedGamesCount,
           playerFeedback: Math.round(userFeedbackEstimate / count) | 0,
-          uid: user.uid,
+          uid: user.uid
         };
         rows.push(rowData);
       });
@@ -141,7 +141,7 @@ const OverallRatingPage = () => {
       getDocs(collection(db, "feedbacks")).then((querySnapshot) => {
         const receivedFeedbacks = querySnapshot.docs.map((doc) => ({
           ...doc.data(),
-          docId: doc.id,
+          docId: doc.id
         }));
         initializeFeedbacks(receivedFeedbacks as IFeedback[]);
       });
@@ -154,17 +154,17 @@ const OverallRatingPage = () => {
       style: {
         backgroundColor: "#6c757d",
         color: "white",
-        cursor: "pointer",
-      },
-    },
+        cursor: "pointer"
+      }
+    }
   ];
 
   const customStyles = {
     rows: {
       style: {
-        cursor: "pointer",
-      },
-    },
+        cursor: "pointer"
+      }
+    }
   };
 
   // A super simple expandable component.
