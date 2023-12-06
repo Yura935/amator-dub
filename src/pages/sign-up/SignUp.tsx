@@ -101,6 +101,7 @@ const SignUpPage = () => {
         toast.error(
           <Toastr itemName="Sign Up error" message="Email already in use." />
         );
+        setLoadingStatus(false);
       });
   };
 

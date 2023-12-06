@@ -13,7 +13,7 @@ import { auth } from "../../firebase";
 
 import classes from "./SignIn.module.scss";
 
-const LoginPage = () => {
+const SignInPage = () => {
   const { isLoading, setLoadingStatus } = useContext(MainContext);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -152,4 +152,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignInPage;
