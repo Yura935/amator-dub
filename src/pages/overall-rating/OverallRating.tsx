@@ -102,7 +102,7 @@ const OverallRatingPage = () => {
   ];
 
   useEffect(() => {
-    if (feedbacks.length && !isDataLoaded) {
+    if (users.length && !isDataLoaded) {
       const rows: any[] = [];
       users.forEach((user, index) => {
         let userFeedbackEstimate = 0;
@@ -123,14 +123,14 @@ const OverallRatingPage = () => {
           maxJumpHeight: user.characteristics.maxJumpHeight,
           playedGamesCount: user.characteristics.playedGamesCount,
           playerFeedback: Math.round(userFeedbackEstimate / count) | 0,
-          uid: user.uid
+          uid: user.uid,
         };
         rows.push(rowData);
       });
       setData(rows);
-      setIsDataLoaded(true);
+      feedbacks.length && setIsDataLoaded(true);
     }
-  }, [users, feedbacks]);
+  }, [users, feedbacks, isDataLoaded]);
 
   const viewPlayerProfile = (event: any) => {
     navigate(`/user/${event.uid}`);
@@ -167,19 +167,11 @@ const OverallRatingPage = () => {
     }
   };
 
-  // A super simple expandable component.
-  //   const ExpandedComponent = (props: { data: any }) => (
-  //     <pre>{JSON.stringify(props.data, null, 2)}</pre>
-  //   );
-
-  //   const selectProps = { indeterminate: isIndeterminate => isIndeterminate };
-
   return (
     <section className={classes.rating}>
       {isDataLoaded && (
         <DataTable
           pagination
-          //   dense
           columns={columns}
           data={filteredItems}
           defaultSortFieldId={8}
@@ -190,11 +182,6 @@ const OverallRatingPage = () => {
           subHeaderComponent={subHeaderComponentMemo}
           onRowClicked={viewPlayerProfile}
           customStyles={customStyles}
-          // selectableRowsComponent={<input type="checkbox" />}
-          // selectableRowsComponentProps={selectProps}
-          // sortIcon={sortIcon}
-          // expandableRows
-          // expandableRowsComponent={ExpandedComponent}
         />
       )}
       {!isDataLoaded && (

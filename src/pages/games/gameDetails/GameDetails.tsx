@@ -332,9 +332,6 @@ const GameDetailsPage = () => {
           <TabPanel value="comments">
             <GameComments isYouPlayer={isYouPlayer} />
           </TabPanel>
-          {game?.status === "finished" && (
-            <TabPanel value="feedback"></TabPanel>
-          )}
         </Tabs>
       </section>
       {

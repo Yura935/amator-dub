@@ -7,7 +7,7 @@ import {
   getCurrentGame,
   getFeedbacks,
   getUserDataFromStore,
-  useStore
+  useStore,
 } from "../../../utils/storeManager";
 import { IFeedback } from "../../../interfaces/feedback";
 import { IPlayer } from "../../../interfaces/player";
@@ -36,7 +36,7 @@ const Players = (props: any) => {
       getDocs(collection(db, "feedbacks")).then((querySnapshot) => {
         const receivedFeedbacks = querySnapshot.docs.map((doc) => ({
           ...doc.data(),
-          docId: doc.id
+          docId: doc.id,
         }));
         initializeFeedbacks(receivedFeedbacks as IFeedback[]);
         setIsFeedbacksLoaded(true);
@@ -72,11 +72,14 @@ const Players = (props: any) => {
   return (
     <div className={classes.players}>
       <div className={classes.buttons}>
-        {!isUserJoined && currentGame.status === "incoming" && (
-          <Button id={currentGame?.docId} onClick={joinGame}>
-            Join game
-          </Button>
-        )}
+        {!isUserJoined &&
+          currentGame.status === "incoming" &&
+          Number(currentGame.playersCount) <
+            Number(currentGame.maxPlayersCount) && (
+            <Button id={currentGame?.docId} onClick={joinGame}>
+              Join game
+            </Button>
+          )}
         {isUserJoined && <Button disabled>You already joined the game</Button>}
       </div>
       {currentGame.players?.length === 0 && (
@@ -101,7 +104,10 @@ const Players = (props: any) => {
               currentGame.status === "finished" &&
               isFeedbacksLoaded &&
               !feedbacks.some(
-                (feedback) => feedback.receiver.uid === player.uid
+                (feedback) =>
+                  feedback.receiver.uid === player.uid &&
+                  feedback.gameId === currentGame.docId &&
+                  feedback.author.uid === userData.uid
               ) && (
                 <Button
                   id={"b" + player.uid}
@@ -117,7 +123,10 @@ const Players = (props: any) => {
               currentGame.status === "finished" &&
               isFeedbacksLoaded &&
               feedbacks.some(
-                (feedback) => feedback.receiver.uid === player.uid
+                (feedback) =>
+                  feedback.receiver.uid === player.uid &&
+                  feedback.gameId === currentGame.docId &&
+                  feedback.author.uid === userData.uid
               ) && (
                 <span role="log" className={classes.feedbackStatus}>
                   Feedback sent!

@@ -4,10 +4,10 @@ import EditUserProfilePage from "../pages/user/edit/EditUserProfile";
 import GameDetailsPage from "../pages/games/gameDetails/GameDetails";
 import GamesPage from "../pages/games/Games";
 import { Guard } from "../guards/Guard";
-import LoginPage from "../pages/sign-in/SignIn";
 import MainPage from "../pages/main/Main";
 import NotFoundPage from "../pages/not-found/Not-found";
 import OverallRatingPage from "../pages/overall-rating/OverallRating";
+import SignInPage from "../pages/sign-in/SignIn";
 import SignUpPage from "../pages/sign-up/SignUp";
 import UserProfilePage from "../pages/user/UserProfile";
 import ViewUserProfilePage from "../pages/user/view/ViewUserProfile";
@@ -26,7 +26,7 @@ const router = (
           <Route path="overall-rating" element={<OverallRatingPage />} />
         </Route>
       </Route>
-      <Route path="/signIn" element={<LoginPage />} />
+      <Route path="/signIn" element={<SignInPage />} />
       <Route path="/signUp" element={<SignUpPage />} />
     </Routes>
   </BrowserRouter>
