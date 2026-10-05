@@ -4,18 +4,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import Loader from "../../components/loader/Loader";
 import { MainContext } from "../../context/main/mainContext";
 import Toastr from "../../components/toastr/Toastr";
 import { auth } from "../../firebase";
+import { decodeDemoCredentials } from "../../utils/demoCredentials";
 
 import classes from "./SignIn.module.scss";
 
 const SignInPage = () => {
   const { isLoading, setLoadingStatus } = useContext(MainContext);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -25,6 +27,22 @@ const SignInPage = () => {
       setLoadingStatus(false);
     }, 1000);
   }, []);
+
+  // Prefills login inputs when portfolio opens the demo with encoded credentials.
+  useEffect(() => {
+    const demoToken = searchParams.get("demo");
+    if (!demoToken) {
+      return;
+    }
+
+    const credentials = decodeDemoCredentials(demoToken);
+    if (!credentials) {
+      return;
+    }
+
+    setEmail(credentials.u);
+    setPassword(credentials.p);
+  }, [searchParams]);
 
   const signInputsList = [
     {
